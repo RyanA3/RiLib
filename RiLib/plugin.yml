@@ -1,0 +1,8 @@
+name: RiLib
+main: me.felnstaren.rilib.RiLib
+version: 1.0.0a
+author: Felnstaren
+description: Library for a lot of my plugins
+api-version: 1.16
+
+commands:
