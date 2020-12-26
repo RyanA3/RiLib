@@ -1,7 +1,6 @@
 package me.felnstaren.rilib.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +19,8 @@ public abstract class MasterCommand extends CommandContinuator implements Comman
 	protected MasterCommand(CommandStub stub, String label, String permission, TabSuggestor... tab_suggestors) {
 		super(stub, label);
 		this.permission = permission;
-		this.tab_suggestors = (ArrayList<TabSuggestor>) Arrays.asList(tab_suggestors);
+		this.tab_suggestors = new ArrayList<TabSuggestor>();
+		for(TabSuggestor suggestor : tab_suggestors) this.tab_suggestors.add(suggestor);
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
