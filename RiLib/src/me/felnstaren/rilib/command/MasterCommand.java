@@ -60,7 +60,7 @@ public abstract class MasterCommand extends CommandContinuator implements Comman
 		
 		for(TabSuggestor suggestor : tab_suggestors) 
 			if(tabs.contains(suggestor.key)) 
-				tabReplace(tabs, suggestor.key, suggestor.getSuggestions());
+				tabReplace(tabs, suggestor.key, suggestor.getSuggestions(sender, args, current));
 		
 		ArrayList<String> done = new ArrayList<String>();
 		StringUtil.copyPartialMatches(args[args.length - 1], tabs, done);
