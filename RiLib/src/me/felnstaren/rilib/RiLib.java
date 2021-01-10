@@ -2,12 +2,12 @@ package me.felnstaren.rilib;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.felnstaren.rilib.item.custom.ItemRegistry;
+import me.felnstaren.rilib.item.custom.CustomMaterial;
 
 public class RiLib extends JavaPlugin {
 
 	public void onEnable() {
-		ItemRegistry.init(this);
+		CustomMaterial.init(this);
 	}
 	
 	public void onDisable() {

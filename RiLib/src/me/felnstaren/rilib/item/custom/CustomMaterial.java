@@ -14,33 +14,33 @@ import other.bananapuncher714.nbt.NBTEditor;
  * using the ItemRegistry to register custom items
  */
 
-public class ItemRegistry {
+public class CustomMaterial {
 
 	protected static final String CUSTOM_KEY = "ritem";
 	
-	private static ItemRegistry INSTANCE;
+	private static CustomMaterial INSTANCE;
 	
-	public static ItemRegistry inst() {
+	public static CustomMaterial inst() {
 		return INSTANCE;
 	}
 	
 	public static void init(JavaPlugin plugin) {
-		INSTANCE = new ItemRegistry(plugin);
+		INSTANCE = new CustomMaterial(plugin);
 	}
 	
 	
 	
-	private ArrayList<CustomItem> custom_items;
+	private ArrayList<CustomMaterialData> custom_items;
 	private ArrayList<String> index_labels;
 	private RecipeMaker recipe_maker;
 	
-	private ItemRegistry(JavaPlugin plugin) {
-		custom_items = new ArrayList<CustomItem>();
+	private CustomMaterial(JavaPlugin plugin) {
+		custom_items = new ArrayList<CustomMaterialData>();
 		index_labels = new ArrayList<String>();
 		recipe_maker = new RecipeMaker(plugin);
 	}
 	
-	public CustomItem item(String item_label) {
+	public CustomMaterialData item(String item_label) {
 		int index = index_labels.indexOf(item_label);
 		if(index == -1) return null;
 		return custom_items.get(index);
@@ -57,7 +57,7 @@ public class ItemRegistry {
 	 * @param new_entry CustomItem object to be registered
 	 * @return True if successful
 	 */
-	public boolean register(CustomItem new_entry) {
+	public boolean register(CustomMaterialData new_entry) {
 		if(exists(new_entry.getLabel())) return false;
 		custom_items.add(new_entry);
 		index_labels.add(new_entry.getLabel());
@@ -70,7 +70,7 @@ public class ItemRegistry {
 		return NBTEditor.contains(stack, CUSTOM_KEY);
 	}
 	
-	public CustomItem getCustom(ItemStack stack) {
+	public CustomMaterialData getCustom(ItemStack stack) {
 		if(!isCustom(stack)) return null;
 		String label = NBTEditor.getString(stack, CUSTOM_KEY);
 		return item(label);

@@ -7,7 +7,7 @@ import me.felnstaren.rilib.item.recipe.CustomRecipe;
 import me.felnstaren.rilib.util.ItemEditor;
 import other.bananapuncher714.nbt.NBTEditor;
 
-public class CustomItem {
+public class CustomMaterialData {
 
 	private String label; //label = internal name
 	private String name;
@@ -15,11 +15,11 @@ public class CustomItem {
 	private int texture_data;
 	private CustomRecipe recipe;
 	
-	public CustomItem(String label, String name, int texture_data, Material material) {
+	public CustomMaterialData(String label, String name, int texture_data, Material material) {
 		construct(label, name, texture_data, material);
 	}
 	
-	public CustomItem(String label, String name, int texture_data, Material material, CustomRecipe recipe) {
+	public CustomMaterialData(String label, String name, int texture_data, Material material, CustomRecipe recipe) {
 		construct(label, name, texture_data, material);
 		setRecipe(recipe);
 	}
@@ -39,7 +39,7 @@ public class CustomItem {
 	
 	public ItemStack asStack() {
 		ItemStack item = new ItemStack(material);
-		item = NBTEditor.set(item, label, ItemRegistry.CUSTOM_KEY);
+		item = NBTEditor.set(item, label, CustomMaterial.CUSTOM_KEY);
 		item = ItemEditor.setName(item, name);
 		item = ItemEditor.setCustomModelData(item, texture_data);
 		return item;
