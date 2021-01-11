@@ -1,4 +1,4 @@
-package me.felnstaren.rilib.util;
+package me.felnstaren.rilib.item.util;
 
 import java.util.Random;
 
@@ -53,7 +53,7 @@ public class ItemEditor {
 	
 	
 	
-	public static ItemStack setCustomModelData(ItemStack item, int data) {
+	public static ItemStack setModelData(ItemStack item, int data) {
 		ItemMeta meta = item.getItemMeta();
 		meta.setCustomModelData(data);
 		item.setItemMeta(meta);

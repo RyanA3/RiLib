@@ -11,7 +11,7 @@ import other.bananapuncher714.nbt.NBTEditor;
 
 /*
  * Use Singleton to retain consistency across all plugins
- * using the ItemRegistry to register custom items
+ * using the CustomMaterial to register custom items
  */
 
 public class CustomMaterial {
@@ -20,12 +20,12 @@ public class CustomMaterial {
 	
 	private static CustomMaterial INSTANCE;
 	
-	public static CustomMaterial inst() {
-		return INSTANCE;
-	}
-	
 	public static void init(JavaPlugin plugin) {
 		INSTANCE = new CustomMaterial(plugin);
+	}
+	
+	public static CustomMaterial inst() {
+		return INSTANCE;
 	}
 	
 	
@@ -65,13 +65,22 @@ public class CustomMaterial {
 		return true;
 	}
 	
-	
-	public boolean isCustom(ItemStack stack) {
+	/**
+	 * Checks if a given ItemStack is a CustomMaterial
+	 * @param stack to check
+	 * @return True if custom
+	 */
+	public boolean is(ItemStack stack) {
 		return NBTEditor.contains(stack, CUSTOM_KEY);
 	}
 	
-	public CustomMaterialData getCustom(ItemStack stack) {
-		if(!isCustom(stack)) return null;
+	/**
+	 * Gets the CustomMaterialData of a custom ItemStack
+	 * @param stack to check
+	 * @return Null if not custom
+	 */
+	public CustomMaterialData get(ItemStack stack) {
+		if(!is(stack)) return null;
 		String label = NBTEditor.getString(stack, CUSTOM_KEY);
 		return item(label);
 	}

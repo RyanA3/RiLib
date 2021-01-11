@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import me.felnstaren.rilib.item.recipe.CustomRecipe;
-import me.felnstaren.rilib.util.ItemEditor;
+import me.felnstaren.rilib.item.util.ItemEditor;
 import other.bananapuncher714.nbt.NBTEditor;
 
 public class CustomMaterialData {
@@ -41,7 +41,7 @@ public class CustomMaterialData {
 		ItemStack item = new ItemStack(material);
 		item = NBTEditor.set(item, label, CustomMaterial.CUSTOM_KEY);
 		item = ItemEditor.setName(item, name);
-		item = ItemEditor.setCustomModelData(item, texture_data);
+		item = ItemEditor.setModelData(item, texture_data);
 		return item;
 	}
 	
