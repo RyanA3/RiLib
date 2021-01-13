@@ -43,6 +43,8 @@ public final class Reflector {
 			CLASS_CACHE.put("CraftPlayer",           Class.forName( "org.bukkit.craftbukkit."  + VERSION +   ".entity.CraftPlayer"                ));
 			CLASS_CACHE.put("Blocks",                Class.forName( "net.minecraft.server."    + VERSION +   ".Blocks"                            ));
 			CLASS_CACHE.put("Block",                 Class.forName( "net.minecraft.server."    + VERSION +   ".Block"                             ));
+			CLASS_CACHE.put("ItemStack",             Class.forName( "net.minecraft.server."    + VERSION +   ".ItemStack"                         ));
+			CLASS_CACHE.put("Item",                  Class.forName( "net.minecraft.server."    + VERSION +   ".Item"                              ));	
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -54,6 +56,7 @@ public final class Reflector {
 			METHOD_CACHE.put("sendPacket",   getNMSClass("PlayerConnection")  .getDeclaredMethod("sendPacket", getNMSClass("Packet")));
 			METHOD_CACHE.put("getHandle",    getNMSClass("CraftPlayer")       .getDeclaredMethod("getHandle"));
 			METHOD_CACHE.put("getServer",    getNMSClass("MinecraftServer")   .getDeclaredMethod("getServer"));
+			METHOD_CACHE.put("getById",      getNMSClass("Item")              .getMethod        ("getById", int.class));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -66,6 +69,8 @@ public final class Reflector {
 			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutWorldParticles"), getNMSClass("PacketPlayOutWorldParticles").getConstructor(getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class));
 			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamBlock"), getNMSClass("ParticleParamBlock").getConstructor(getNMSClass("Particle"), getNMSClass("IBlockData")));
 			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamRedstone"), getNMSClass("ParticleParamRedstone").getConstructor(float.class, float.class, float.class, float.class));
+			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamItem"), getNMSClass("ParticleParamItem").getConstructor(getNMSClass("Particle"), getNMSClass("ItemStack")));
+			CONSTRUCTOR_CACHE.put(getNMSClass("ItemStack"), getNMSClass("ItemStack").getConstructor(getNMSClass("IMaterial")));
 			//CONSTRUCTOR_CACHE.put(getNMSClass("Particle"), getNMSClass("Particle").getConstructor(boolean.class, getNMSClass("ParticleParam$a")));
 		} catch(Exception e) {
 			e.printStackTrace();
