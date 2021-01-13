@@ -6,3 +6,6 @@ description: Library for a lot of my plugins
 api-version: 1.16
 
 commands:
+ dtest:
+  aliases: []
+  description: development test command

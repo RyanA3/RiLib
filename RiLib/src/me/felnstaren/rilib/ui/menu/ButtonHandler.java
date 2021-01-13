@@ -1,4 +1,4 @@
-package me.felnstaren.rilib.menu;
+package me.felnstaren.rilib.ui.menu;
 
 import java.util.ArrayList;
 
@@ -20,29 +20,29 @@ public class ButtonHandler {
 	
 	
 
-	private ArrayList<String> labels_index;
+	private ArrayList<String> index_labels;
 	private ArrayList<MenuButton> buttons;
 	
 	private ButtonHandler() {
-		labels_index = new ArrayList<String>();
+		index_labels = new ArrayList<String>();
 		buttons = new ArrayList<MenuButton>();
 	}
 	
 	
 	
 	public boolean isButton(String label) { 
-		return labels_index.contains(label);
+		return index_labels.contains(label);
 	}
 	
 	public MenuButton getButton(String label) {
 		if(!isButton(label)) return null;
-		return buttons.get(labels_index.indexOf(label));
+		return buttons.get(index_labels.indexOf(label));
 	}
 	
 	public void register(MenuButton button, String label) {
 		if(isButton(label)) return;
 		buttons.add(button);
-		labels_index.add(label);
+		index_labels.add(label);
 	}
 	
 }

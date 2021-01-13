@@ -1,4 +1,4 @@
-package me.felnstaren.rilib.menu;
+package me.felnstaren.rilib.ui.menu;
 
 import org.bukkit.entity.Player;
 
@@ -25,6 +25,7 @@ public class MenuSession {
 	public void swapMenus(Menu menu) {
 		this.menu.close();
 		this.menu = menu;
+		this.menu.open(player);
 	}
 	
 	

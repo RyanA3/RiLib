@@ -1,6 +1,7 @@
-package me.felnstaren.rilib.menu;
+package me.felnstaren.rilib.ui.menu;
 
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,6 +29,10 @@ public class Menu {
 		inventory.clear();
 		for(HumanEntity viewer : inventory.getViewers())
 			viewer.closeInventory();
+	}
+	
+	public void open(Player player) {
+		player.openInventory(inventory);
 	}
 	
 }

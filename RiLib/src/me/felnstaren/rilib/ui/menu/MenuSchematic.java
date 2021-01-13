@@ -1,4 +1,4 @@
-package me.felnstaren.rilib.menu;
+package me.felnstaren.rilib.ui.menu;
 
 import java.util.HashMap;
 

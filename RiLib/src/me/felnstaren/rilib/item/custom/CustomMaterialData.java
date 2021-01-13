@@ -37,7 +37,7 @@ public class CustomMaterialData {
 	
 	
 	
-	public ItemStack asStack() {
+	public ItemStack stack() {
 		ItemStack item = new ItemStack(material);
 		item = NBTEditor.set(item, label, CustomMaterial.CUSTOM_KEY);
 		item = ItemEditor.setName(item, name);

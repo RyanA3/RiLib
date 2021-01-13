@@ -61,7 +61,7 @@ public class CustomMaterial {
 		if(exists(new_entry.getLabel())) return false;
 		custom_items.add(new_entry);
 		index_labels.add(new_entry.getLabel());
-		Bukkit.addRecipe(recipe_maker.construct(new_entry.getRecipe(), new_entry.asStack()));
+		Bukkit.addRecipe(recipe_maker.construct(new_entry.getRecipe(), new_entry.stack()));
 		return true;
 	}
 	
@@ -79,7 +79,7 @@ public class CustomMaterial {
 	 * @param stack to check
 	 * @return Null if not custom
 	 */
-	public CustomMaterialData get(ItemStack stack) {
+	public CustomMaterialData as(ItemStack stack) {
 		if(!is(stack)) return null;
 		String label = NBTEditor.getString(stack, CUSTOM_KEY);
 		return item(label);

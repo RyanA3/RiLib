@@ -41,6 +41,8 @@ public final class Reflector {
 			CLASS_CACHE.put("MinecraftServer",       Class.forName( "net.minecraft.server."    + VERSION +   ".MinecraftServer"                   ));
 			//CLASS_CACHE.put("PacketPlayOutPlayerListHeaderFooter", Class.forName( "net.minecraft.server" + VERSION + "PacketPlayOutPlayerListHeaderFooter" ));
 			CLASS_CACHE.put("CraftPlayer",           Class.forName( "org.bukkit.craftbukkit."  + VERSION +   ".entity.CraftPlayer"                ));
+			CLASS_CACHE.put("Blocks",                Class.forName( "net.minecraft.server."    + VERSION +   ".Blocks"                            ));
+			CLASS_CACHE.put("Block",                 Class.forName( "net.minecraft.server."    + VERSION +   ".Block"                             ));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -61,6 +63,9 @@ public final class Reflector {
 		try {
 			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutChat"), getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), getNMSClass("ChatMessageType"), UUID.class));
 			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutPlayerListHeaderFooter"), getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor());
+			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutWorldParticles"), getNMSClass("PacketPlayOutWorldParticles").getConstructor(getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class));
+			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamBlock"), getNMSClass("ParticleParamBlock").getConstructor(getNMSClass("Particle"), getNMSClass("IBlockData")));
+			//CONSTRUCTOR_CACHE.put(getNMSClass("Particle"), getNMSClass("Particle").getConstructor(boolean.class, getNMSClass("ParticleParam$a")));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
