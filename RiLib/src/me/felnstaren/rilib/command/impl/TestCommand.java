@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import me.felnstaren.rilib.chat.Messenger;
 import me.felnstaren.rilib.particle.PacketParticle;
 import me.felnstaren.rilib.particle.PacketParticleBlock;
+import me.felnstaren.rilib.particle.PacketParticleDust;
 import me.felnstaren.rilib.particle.PacketParticleType;
 
 public class TestCommand implements CommandExecutor {
@@ -23,18 +24,30 @@ public class TestCommand implements CommandExecutor {
 		
 		int p = rand.nextInt(PacketParticleType.values().length);
 		if(args.length > 0) p = Integer.parseInt(args[0]);
+		if(p >= PacketParticleType.values().length) p = PacketParticleType.values().length - 1;
 		
 		PacketParticle particle;
 		
-		if(p == 3) {
+		if(p == 3 || p == 23) {
 			String block = "HONEY_BLOCK";
 			if(args.length > 1) block = args[1].toUpperCase();
 			
-			particle = new PacketParticleBlock(1, 0, 1, 0.5f, block);
-			Messenger.send(player, "#F55Spawning particle #999" + block);
+			particle = new PacketParticleBlock(PacketParticleType.values()[p], 1, 1, 0, 0, block);
+			Messenger.send(player, "#F55Spawning Block-Based particle #999" + block);
+		} else if(p == 14) {
+			float red = 0, green = 0, blue = 0, size = 4;
+			if(args.length > 4) {
+				red = Float.parseFloat(args[1]);
+				green = Float.parseFloat(args[2]);
+				blue = Float.parseFloat(args[3]);
+				size = Float.parseFloat(args[4]);
+			}
+			
+			particle = new PacketParticleDust(1, 1, 0, 0, red, green, blue, size);
+			Messenger.send(player, "#F55Spawning Dust-Based particle #999(" + red + "," + green + "," + blue + ")*" + size);
 		} else {
 			PacketParticleType type = PacketParticleType.values()[p];
-			particle = new PacketParticle(type, 0.5f, 0, 0.5f, 0);
+			particle = new PacketParticle(type, 1, 1, 0, 0);
 			Messenger.send(player, "#F55Spawning particle #999" + type.name());
 		}
 		

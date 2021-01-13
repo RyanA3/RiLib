@@ -65,6 +65,7 @@ public final class Reflector {
 			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutPlayerListHeaderFooter"), getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor());
 			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutWorldParticles"), getNMSClass("PacketPlayOutWorldParticles").getConstructor(getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class));
 			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamBlock"), getNMSClass("ParticleParamBlock").getConstructor(getNMSClass("Particle"), getNMSClass("IBlockData")));
+			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamRedstone"), getNMSClass("ParticleParamRedstone").getConstructor(float.class, float.class, float.class, float.class));
 			//CONSTRUCTOR_CACHE.put(getNMSClass("Particle"), getNMSClass("Particle").getConstructor(boolean.class, getNMSClass("ParticleParam$a")));
 		} catch(Exception e) {
 			e.printStackTrace();

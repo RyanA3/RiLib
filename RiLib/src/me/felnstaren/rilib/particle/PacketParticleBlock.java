@@ -10,8 +10,9 @@ public class PacketParticleBlock extends PacketParticle {
 
 	private String blockname;
 	
-	public PacketParticleBlock(float speed, float vx, float vy, float vz, String blockname) {
-		super(PacketParticleType.BLOCK, speed, vx, vy, vz);
+	public PacketParticleBlock(PacketParticleType type, float speed, float vx, float vy, float vz, String blockname) {
+		super(type, speed, vx, vy, vz);
+		if(type != PacketParticleType.BLOCK && type != PacketParticleType.FALLING_DUST) RiLib.LOGGER.log(Level.WARNING, "PacketParticleBlock should not be used for particle type " + type.name() + "!");
 		this.blockname = blockname;
 	}
 	
@@ -20,7 +21,7 @@ public class PacketParticleBlock extends PacketParticle {
 		Object param = null;
 		
 		try {
-			Field particlefield = Reflector.getNMSClass("Particles").getField("BLOCK");
+			Field particlefield = Reflector.getNMSClass("Particles").getField(type.name());
 			Object particle = particlefield.get(Reflector.getNMSClass("Particles"));
 		
 			Field blockfield = Reflector.getNMSClass("Blocks").getField(blockname);
