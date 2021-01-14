@@ -69,9 +69,11 @@ public class PromptHandler {
 	}
 	
 	public Prompt getPrompt(Player player) {
-		Prompt p = null;
-		for(Prompt ip : prompts) if(p.getPlayer().equals(player)) p = ip;
-		return p;
+		Prompt prompt = null;
+		for(Prompt p : prompts) 
+			if(p.getPlayer().equals(player)) 
+				{ prompt = p; break; }
+		return prompt;
 	}
 	
 	public Prompt getPrompt(UUID id) {

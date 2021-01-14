@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.felnstaren.rilib.chat.Messenger;
-import me.felnstaren.rilib.ui.prompt.ChatOptionPrompt;
 import me.felnstaren.rilib.ui.prompt.ChatPrompt;
 import me.felnstaren.rilib.ui.prompt.PromptHandler;
 

@@ -20,6 +20,7 @@ public class ChatPromptListener implements Listener {
 		if(prompt instanceof ChatOptionPrompt) return;
 		
 		prompt.callback(event.getMessage());
+		event.setCancelled(true);
 	}
 	
 }
