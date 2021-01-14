@@ -42,4 +42,8 @@ public abstract class Prompt<T extends Object> {
 		return time <= 0 || expired;
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+	
 }

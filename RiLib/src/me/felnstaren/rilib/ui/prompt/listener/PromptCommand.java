@@ -1,4 +1,4 @@
-package me.felnstaren.rilib.command.impl;
+package me.felnstaren.rilib.ui.prompt.listener;
 
 import java.util.UUID;
 
@@ -13,6 +13,7 @@ import me.felnstaren.rilib.ui.prompt.PromptHandler;
 
 public class PromptCommand implements CommandExecutor {
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(!(sender instanceof Player)) return true;
 		Player player = (Player) sender;

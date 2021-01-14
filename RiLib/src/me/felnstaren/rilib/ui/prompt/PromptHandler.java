@@ -3,8 +3,12 @@ package me.felnstaren.rilib.ui.prompt;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import me.felnstaren.rilib.ui.prompt.listener.ChatPromptListener;
 
 /*
  * Use Singleton to retain consistency across all plugins
@@ -44,6 +48,9 @@ public class PromptHandler {
 		prompts = new ArrayList<Prompt>();
 		index_ids = new ArrayList<UUID>();
 		updator.runTaskTimer(plugin, 20, 20);
+		
+		PluginManager pm = plugin.getServer().getPluginManager();
+		pm.registerEvents(new ChatPromptListener(), plugin);
 	}
 
 	public void register(Prompt prompt) {
@@ -54,6 +61,17 @@ public class PromptHandler {
 	
 	public boolean isActive(UUID id) {
 		return index_ids.contains(id) && !getPrompt(id).expired();
+	}
+	
+	public boolean isPrompted(Player player) {
+		for(Prompt p : prompts) if(p.getPlayer().equals(player)) return true;
+		return false;
+	}
+	
+	public Prompt getPrompt(Player player) {
+		Prompt p = null;
+		for(Prompt ip : prompts) if(p.getPlayer().equals(player)) p = ip;
+		return p;
 	}
 	
 	public Prompt getPrompt(UUID id) {
