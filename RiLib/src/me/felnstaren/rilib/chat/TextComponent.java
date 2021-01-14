@@ -19,6 +19,14 @@ public class TextComponent implements IComponent {
 	
 	
 	
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	public void replaceAll(String what, String replacement) {
+		this.text = text.replaceAll(what, replacement);
+	}
+	
 	public TextComponent setColor(String color) {
 		this.color = color;
 		return this;

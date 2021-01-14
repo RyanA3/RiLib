@@ -26,6 +26,10 @@ public class Message {
 		return components.get(index);
 	}
 	
+	public int size() {
+		return components.size();
+	}
+	
 	
 	
 	public String build() {

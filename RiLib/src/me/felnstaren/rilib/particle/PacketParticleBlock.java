@@ -23,7 +23,7 @@ public class PacketParticleBlock extends PacketParticle {
 		try {
 			Field particlefield = Reflector.getNMSClass("Particles").getField(type.name());
 			Object particle = particlefield.get(Reflector.getNMSClass("Particles"));
-		
+			
 			Field blockfield = Reflector.getNMSClass("Blocks").getField(blockname);
 			Object block = blockfield.get(Reflector.getNMSClass("Blocks"));
 			

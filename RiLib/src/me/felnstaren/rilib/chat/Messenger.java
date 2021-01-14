@@ -35,7 +35,7 @@ public class Messenger {
 			if(msg[i] != '&') continue;
 			if(msg.length <= i + 1) break;
 			if(DEFAULT_COLOR_CHARS.contains(Character.toString(msg[i + 1])))
-				msg[i] = '�';
+				msg[i] = '\u00a7';
 		}
 		return new String(msg);
 	}

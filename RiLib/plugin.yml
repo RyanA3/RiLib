@@ -9,3 +9,9 @@ commands:
  dtest:
   aliases: []
   description: development test command
+ dparticle:
+  aliases: [dparti]
+  description: custom particle command
+ prompt:
+  aliases: []
+  description: core prompt response command

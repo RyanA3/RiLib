@@ -13,8 +13,8 @@ public class PacketParticle {
 
 	public float vx, vy, vz;
 	public float speed;
-	public int count = 1;
-	public PacketParticleType type;
+	public int count = 0;  //Count must be set to 0 for direction to work
+ 	public PacketParticleType type;
 	
 	public PacketParticle(PacketParticleType type, float speed, float vx, float vy, float vz) {
 		this.type = type;
