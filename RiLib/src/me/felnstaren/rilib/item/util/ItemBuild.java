@@ -53,5 +53,10 @@ public class ItemBuild {
 		item = ItemEditor.setModelData(item, value);
 		return this;
 	}
+	
+	public ItemBuild damage(int value) {
+		item = ItemEditor.damage(item, value);
+		return this;
+	}
 
 }

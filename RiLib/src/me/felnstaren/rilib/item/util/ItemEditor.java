@@ -14,7 +14,7 @@ public class ItemEditor {
 
 	public static ItemStack setName(ItemStack item, String str) {
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(str.replace('&', '�'));
+		meta.setDisplayName(str.replace('&', '\u00a7'));
 		item.setItemMeta(meta);
 		return item;
 	}
