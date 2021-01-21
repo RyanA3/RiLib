@@ -4,7 +4,8 @@ import org.bukkit.ChatColor;
 
 public enum Level {
 
-	SEVERE(ChatColor.RED, 3),
+	FATAL(ChatColor.RED, 4),
+	SEVERE(ChatColor.DARK_RED, 3),
 	WARNING(ChatColor.YELLOW, 2),
 	INFO(ChatColor.WHITE, 1),
 	DEBUG(ChatColor.GRAY, 0);
