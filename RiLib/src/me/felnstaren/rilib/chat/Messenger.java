@@ -47,7 +47,7 @@ public class Messenger {
 	 * messages to players which contain #RGB and #RRGGBB codes to indicate
 	 * the following characters' color.
 	 * @param message String to be converted to JSON formatting
-	 * @return A {@link LegacyMessage} object, use {@link LegacyMessage#build()} to build the raw JSON string
+	 * @return A {@link Message} object, use {@link Message#build()} to build the raw JSON string
 	 */
 	public static Message colorWithJson(String message) {
 		message = color(message);
@@ -166,13 +166,15 @@ public class Messenger {
 	}
 	
 	public static void broadcast(String message) {
+		String send = colorWithJson(message).build();
 		for(Player p : Bukkit.getOnlinePlayers())
-			send(p, message);
+			sendChatPacket(p, send);
 	}
 	
 	public static void broadcast(Message message) {
+		String send = message.build();
 		for(Player p : Bukkit.getOnlinePlayers())
-			send(p, message);
+			sendChatPacket(p, send);
 	}
 	
 	/**
@@ -222,6 +224,13 @@ public class Messenger {
 	
 	public static int sendHeaderFooter(Player player, Message header, Message footer) {
 		return sendHeaderFooterPacket(player, header.build(), footer.build());
+	}
+	
+	public static void broadcastHeaderFooter(Message header, Message footer) {
+		String out_head = header.build();
+		String out_foot = footer.build();
+		for(Player p : Bukkit.getOnlinePlayers())
+			sendHeaderFooterPacket(p, out_head, out_foot);
 	}
 	
 }
