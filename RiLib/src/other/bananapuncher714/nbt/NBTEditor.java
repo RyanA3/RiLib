@@ -31,6 +31,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @version 7.16.1
  * @author BananaPuncher714
  */
+@SuppressWarnings({"deprecation", "unchecked"})
 public final class NBTEditor {
 	private static final Map< String, Class<?> > classCache;
 	private static final Map< String, Method > methodCache;
@@ -1284,7 +1285,6 @@ public final class NBTEditor {
 		}
 	}
 
-	@SuppressWarnings( "unchecked" )
 	private static Object getTags( Object tag ) {
 		Map< Object, Object > tags = new HashMap< Object, Object >();
 		try {

@@ -39,6 +39,10 @@ public abstract class DataPlayer {
 	
 	
 	
+	public String getPath() {
+		return path;
+	}
+	
 	public UUID getUniqueId() {
 		return uuid;
 	}
