@@ -3,19 +3,24 @@ package me.felnstaren.rilib.command;
 import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import me.felnstaren.rilib.chat.Messenger;
 
 public abstract class CommandContinuator implements CommandElement, Tabbable {
 	
 	protected ArrayList<SubCommand> commands;
 	protected ArrayList<SubArgument> arguments;
 	protected CommandStub stub;
+	protected String permission;
 	protected String label;
 	
-	protected CommandContinuator(CommandStub stub, String label) {
+	protected CommandContinuator(CommandStub stub, String label, String permission) {
 		this.commands = new ArrayList<SubCommand>();
 		this.arguments = new ArrayList<SubArgument>();
 		this.stub = stub;
 		this.label = label;
+		this.permission = permission;
 	}
 	
 	
@@ -42,6 +47,12 @@ public abstract class CommandContinuator implements CommandElement, Tabbable {
 	}
 	
 	protected boolean stub(CommandSender sender, String[] args) {
+		if(permission != null && !sender.hasPermission(permission)) {
+			if(sender instanceof Player) Messenger.send((Player) sender, "#F55You do not have permission to #999" + permission + "#F55!");
+			else sender.sendMessage("You do not have permission to " + permission + "!");
+			return true;
+		}
+		
 		return stub.handle(sender, args, args.length - 1);
 	}
 	
