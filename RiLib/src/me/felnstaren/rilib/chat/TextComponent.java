@@ -71,9 +71,12 @@ public class TextComponent implements IComponent {
 	
 	
 	
-	
+	/**
+	 * Builds fully functional version of text component
+	 * @return 
+	 */
 	public String build() {
-		String build = buildNonceComponents();
+		String build = buildDefunct();
 		
 		if(hover_component != null)
 			build += ",\"hoverEvent\":{" + hover_component.build() + "}";
@@ -83,8 +86,13 @@ public class TextComponent implements IComponent {
 		return build;
 	}
 	
-	public String buildNonceComponents() {
-		String build = "\"text\":\"" + text + "\"";
+	/**
+	 * Builds static version of text component
+	 * (No hover or click components)
+	 * @return
+	 */
+	public String buildDefunct() {
+		String build = base();
 		if(color != null) build += ",\"color\":\"" + color + "\"";
 		if(strikethrough) build += ",\"strikethrough\":\"" + strikethrough + "\"";
 		if(underlined) build += ",\"underlined\":\"" + underlined + "\"";
@@ -94,6 +102,14 @@ public class TextComponent implements IComponent {
 		if(font != null) build += ",\"font\":\"" + font + "\"";
 		
 		return build;
+	}
+	
+	/**
+	 * Provides base tellraw type (see extensions of TextComponent for overrides)
+	 * @return
+	 */
+	protected String base() {
+		return "\"text\":\"" + text + "\"";
 	}
 	
 	

@@ -9,7 +9,7 @@ public class HoverComponent implements IComponent {
 	}
 	
 	public String build() {
-		return "\"action\":\"show_text\",\"contents\":{" + hover_value.buildNonceComponents() + "}";
+		return "\"action\":\"show_text\",\"contents\":{" + hover_value.buildDefunct() + "}";
 	}
 
 }
