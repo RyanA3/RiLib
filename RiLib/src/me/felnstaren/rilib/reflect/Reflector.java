@@ -22,8 +22,8 @@ public final class Reflector {
 	
 	public static final Map< String,   Class<?>       >   CLASS_CACHE;
 	public static final Map< String,   Method         >   METHOD_CACHE;
-	public static final Map< Class<?>, Constructor<?> >   CONSTRUCTOR_CACHE;
-	public static final Map< Class<?>, Field          >   FIELD_CACHE;
+	public static final Map< String,   Constructor<?> >   CONSTRUCTOR_CACHE;
+	public static final Map< String,   Field          >   FIELD_CACHE;
 
 	static {
 		VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -62,25 +62,27 @@ public final class Reflector {
 		}
 		
 		
-		CONSTRUCTOR_CACHE = new HashMap<Class<?>, Constructor<?>>();
+		CONSTRUCTOR_CACHE = new HashMap<String, Constructor<?>>();
 		try {
-			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutChat"), getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), getNMSClass("ChatMessageType"), UUID.class));
-			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutPlayerListHeaderFooter"), getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor());
-			CONSTRUCTOR_CACHE.put(getNMSClass("PacketPlayOutWorldParticles"), getNMSClass("PacketPlayOutWorldParticles").getConstructor(getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class));
-			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamBlock"), getNMSClass("ParticleParamBlock").getConstructor(getNMSClass("Particle"), getNMSClass("IBlockData")));
-			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamRedstone"), getNMSClass("ParticleParamRedstone").getConstructor(float.class, float.class, float.class, float.class));
-			CONSTRUCTOR_CACHE.put(getNMSClass("ParticleParamItem"), getNMSClass("ParticleParamItem").getConstructor(getNMSClass("Particle"), getNMSClass("ItemStack")));
-			CONSTRUCTOR_CACHE.put(getNMSClass("ItemStack"), getNMSClass("ItemStack").getConstructor(getNMSClass("IMaterial")));
+			CONSTRUCTOR_CACHE.put("PacketPlayOutChat", getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), getNMSClass("ChatMessageType"), UUID.class));
+			CONSTRUCTOR_CACHE.put("PacketPlayOutPlayerListHeaderFooter", getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor());
+			CONSTRUCTOR_CACHE.put("PacketPlayOutWorldParticles", getNMSClass("PacketPlayOutWorldParticles").getConstructor(getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class));
+			CONSTRUCTOR_CACHE.put("ParticleParamBlock", getNMSClass("ParticleParamBlock").getConstructor(getNMSClass("Particle"), getNMSClass("IBlockData")));
+			CONSTRUCTOR_CACHE.put("ParticleParamRedstone", getNMSClass("ParticleParamRedstone").getConstructor(float.class, float.class, float.class, float.class));
+			CONSTRUCTOR_CACHE.put("ParticleParamItem", getNMSClass("ParticleParamItem").getConstructor(getNMSClass("Particle"), getNMSClass("ItemStack")));
+			CONSTRUCTOR_CACHE.put("ItemStack", getNMSClass("ItemStack").getConstructor(getNMSClass("IMaterial")));
 			//CONSTRUCTOR_CACHE.put(getNMSClass("Particle"), getNMSClass("Particle").getConstructor(boolean.class, getNMSClass("ParticleParam$a")));
+			CONSTRUCTOR_CACHE.put("PacketPlayOutEntityEffect", getNMSClass("PacketPlayOutEntityEffect").getConstructor(int.class, getNMSClass("MobEffect")));
+			CONSTRUCTOR_CACHE.put("MobEffect", getNMSClass("MobEffect").getConstructor(getNMSClass("MobEffectList"), int.class, int.class, boolean.class, boolean.class, boolean.class));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 		
-		FIELD_CACHE = new HashMap<Class<?>, Field>();
+		FIELD_CACHE = new HashMap<String, Field>();
 		try {
-			FIELD_CACHE.put(getNMSClass("EntityPlayer"), getNMSClass("EntityPlayer").getField("playerConnection"));
-			FIELD_CACHE.put(getNMSClass("MinecraftServer"), getNMSClass("MinecraftServer").getField("recentTps"));
+			FIELD_CACHE.put("EntityPlayer", getNMSClass("EntityPlayer").getField("playerConnection"));
+			FIELD_CACHE.put("MinecraftServer", getNMSClass("MinecraftServer").getField("recentTps"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -106,6 +108,19 @@ public final class Reflector {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static Object getDeclaredField(Object from, String field) {
+		try {
+			return from.getClass().getDeclaredField(field).get(from);
+		} catch (Exception e) { e.printStackTrace(); }
+		return null; 
+	}
+	
+	public static void setDeclaredField(Object from, String field, Object value) {
+		try {
+			from.getClass().getDeclaredField(field).set(from, value);
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
 }

@@ -17,6 +17,16 @@ public class TextComponent implements IComponent {
 		this.text = text;
 	}
 	
+	public TextComponent(String text, String color, boolean strikethrough, boolean underlined, boolean obfuscated, boolean italic, boolean bold) {
+		this.text = text;
+		this.color = color;
+		this.strikethrough = strikethrough;
+		this.underlined = underlined;
+		this.obfuscated = obfuscated;
+		this.italic = italic;
+		this.bold = bold;
+	}
+	
 	
 	
 	public void setText(String text) {
@@ -95,7 +105,7 @@ public class TextComponent implements IComponent {
 		String build = base();
 		if(color != null) build += ",\"color\":\"" + color + "\"";
 		if(strikethrough) build += ",\"strikethrough\":\"" + strikethrough + "\"";
-		if(underlined) build += ",\"underlined\":\"" + underlined + "\"";
+		/*if(underlined)*/ build += ",\"underlined\":\"" + underlined + "\"";
 		if(obfuscated) build += ",\"obfuscated\":\"" + obfuscated + "\"";
 		if(italic) build += ",\"italic\":\"" + italic + "\"";
 		if(bold) build += ",\"bold\":\"" + bold + "\"";
