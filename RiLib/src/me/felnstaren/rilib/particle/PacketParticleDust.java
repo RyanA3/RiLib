@@ -21,7 +21,7 @@ public class PacketParticleDust extends PacketParticle {
 		Object param;
 		
 		try {
-			param = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("ParticleParamRedstone")).newInstance(red, green, blue, size);
+			param = Reflector.CONSTRUCTOR_CACHE.get("ParticleParamRedstone").newInstance(red, green, blue, size);
 		} catch (Exception e) {
 			RiLib.LOGGER.log(Level.DEBUG, "Failed to get ParticleParamRedstone for " + red + "," + green + "," + blue + "," + size);
 			param = super.getParticleParam();

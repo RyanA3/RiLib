@@ -30,7 +30,7 @@ public class PacketParticleBlock extends PacketParticle {
 			Field blockdatafield = Reflector.getNMSClass("Block").getDeclaredField("blockData");
 			blockdatafield.setAccessible(true);
 			Object blockdata = blockdatafield.get(block);
-			param = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("ParticleParamBlock")).newInstance(particle, blockdata);
+			param = Reflector.CONSTRUCTOR_CACHE.get("ParticleParamBlock").newInstance(particle, blockdata);
 		} catch(Exception e) {
 			RiLib.LOGGER.log(Level.DEBUG, "Failed to get ParticleParamBlock for " + blockname);
 			param = super.getParticleParam();

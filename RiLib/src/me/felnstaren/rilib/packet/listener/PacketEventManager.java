@@ -40,6 +40,11 @@ public class PacketEventManager {
 		PACKET_IN_LISTENER.remove(listener);
 	}
 	
+	public void clear() {
+		PACKET_OUT_LISTENER.clear();
+		PACKET_IN_LISTENER.clear();
+	}
+	
 	
 	
 	/**

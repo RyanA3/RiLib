@@ -8,10 +8,8 @@ import me.felnstaren.rilib.item.custom.CustomMaterial;
 import me.felnstaren.rilib.logger.Level;
 import me.felnstaren.rilib.logger.Logger;
 import me.felnstaren.rilib.packet.listener.PacketEvent;
-import me.felnstaren.rilib.packet.listener.PacketInListener;
 import me.felnstaren.rilib.packet.listener.PacketInjector;
 import me.felnstaren.rilib.packet.listener.PacketListener;
-import me.felnstaren.rilib.packet.listener.PacketOutListener;
 import me.felnstaren.rilib.ui.menu.ButtonHandler;
 import me.felnstaren.rilib.ui.menu.MenuSessionHandler;
 import me.felnstaren.rilib.ui.prompt.PromptHandler;
@@ -20,7 +18,7 @@ import me.felnstaren.rilib.ui.prompt.listener.PromptCommand;
 public class RiLib extends JavaPlugin implements PacketListener {
 
 	public static Logger LOGGER;
-	private PacketInjector injector;
+	public static PacketInjector INJECTOR;
 	
 	public void onEnable() {
 		LOGGER = new Logger(this.getServer().getConsoleSender(), "RiLib");
@@ -30,8 +28,8 @@ public class RiLib extends JavaPlugin implements PacketListener {
 		MenuSessionHandler.init(this);
 		PromptHandler.init(this);
 		
-		injector = new PacketInjector(this);
-		injector.getManager().registerInOut(this);
+		INJECTOR = new PacketInjector(this);
+		INJECTOR.getManager().registerOut(this);
 		
 		
 		this.getCommand("dtest").setExecutor(new TestCommand());
@@ -40,13 +38,14 @@ public class RiLib extends JavaPlugin implements PacketListener {
 	}
 	
 	public void onDisable() {
-		injector.shutdown();
+		INJECTOR.getManager().clear();
+		INJECTOR.shutdown();
 	}
 
 	@Override
 	public void onEvent(PacketEvent event) {
-		//LOGGER.log(Level.DEBUG, "Detected Packet I/O " + event.getPacket().getClass().getName());
-		if(event.isPacket("PacketPlayOutEntityEffect")) LOGGER.log(Level.DEBUG, "Effect Out!");
+		if(!event.isPacket("PacketPlayOutEntityMetadata")) return;
+		LOGGER.log(Level.DEBUG, "Metadata packet got - " + event.getPacket().toString());
 	}
 	
 }

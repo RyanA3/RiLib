@@ -24,8 +24,8 @@ public class PacketParticleItem extends PacketParticle {
 			Object particle = particlefield.get(Reflector.getNMSClass("Particles"));
 			
 			Object imat = Reflector.METHOD_CACHE.get("getById").invoke(null, item);
-			Object itemstack = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("ItemStack")).newInstance(imat);
-			param = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("ParticleParamItem")).newInstance(particle, itemstack);
+			Object itemstack = Reflector.CONSTRUCTOR_CACHE.get("ItemStack").newInstance(imat);
+			param = Reflector.CONSTRUCTOR_CACHE.get("ParticleParamItem").newInstance(particle, itemstack);
 		} catch(Exception e) {
 			RiLib.LOGGER.log(Level.DEBUG, "Failed to get ParticleParamItem for " + item);
 			param = super.getParticleParam();

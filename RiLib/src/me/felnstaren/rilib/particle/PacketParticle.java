@@ -26,7 +26,7 @@ public class PacketParticle {
 	
 	public void send(Player player, double offx, double offy, double offz) {
 		try {
-			Object packet = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("PacketPlayOutWorldParticles")).newInstance(getParticleParam(), false, offx, offy, offz, vx, vy, vz, speed, count);
+			Object packet = Reflector.CONSTRUCTOR_CACHE.get("PacketPlayOutWorldParticles").newInstance(getParticleParam(), false, offx, offy, offz, vx, vy, vz, speed, count);
 			Packeteer.sendClientPacket(player, packet);
 		} catch (Exception e) {
 			e.printStackTrace();

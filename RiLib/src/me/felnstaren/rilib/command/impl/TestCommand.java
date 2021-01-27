@@ -5,11 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.felnstaren.rilib.chat.Message;
-import me.felnstaren.rilib.chat.Messenger;
 import me.felnstaren.rilib.packet.PacketPlayer;
-import me.felnstaren.rilib.ui.prompt.ChatPrompt;
-import me.felnstaren.rilib.ui.prompt.PromptHandler;
 
 public class TestCommand implements CommandExecutor {
 

@@ -122,94 +122,7 @@ public class Messenger {
 	
 	
 	
-	private static final char[] STATE_KEYS = {'#', '_', '*'};
-	//TODO: Better Parsing... one day
-	@Deprecated
-	public static Message parse(String message) {
-		//message = color(message);
-		char[] chars = message.toCharArray();
-		boolean in_state = false;
-		String component = "";
-		String color = null;
-		boolean underlined = false;
-		boolean bold = false;
-		boolean italic = false;
-		
-		
-		Message parsed_message = new Message();
-		for(int i = 0; i < chars.length; i++) {
-			
-			if(chars[i] == '#') { //Handle Color change
-				String newcolor = isGetColor(chars, i);
-				if(newcolor == null) { component += chars[i]; continue; }
-				if(color == null) { parsed_message.addComponent(new TextComponent(component)); }
-				else parsed_message.addComponent(new TextComponent(component, color, false, underlined, false, italic, bold));
-				
-				i += newcolor.length() + 1;
-				if(newcolor.length() == 3) {
-					String newnewcolor = "";
-					for(int k = 0; k < 3; k++) newnewcolor += Character.toString(newcolor.charAt(k)) + Character.toString(newcolor.charAt(k));
-					newcolor = newnewcolor;
-				}
-				color = "#" + newcolor;
-				component = "";
-			} else if(chars[i] == '_') { //Handle underline change
-				if(!isKey(chars, i, "__")) { component += chars[i]; continue; }
-				parsed_message.addComponent(new TextComponent(component, color, false, underlined, false, italic, bold));
-				underlined = !underlined;
-				i += 2; 
-				component = "";
-			} else if(chars[i] == '*') { //Handle bold/italic change
-				parsed_message.addComponent(new TextComponent(component, color, false, underlined, false, italic, bold));
-				
-				if(isKey(chars, i, "***")) {
-					bold = !bold; italic = !italic;
-					i += 3;
-				} else if(isKey(chars, i, "**")) {	
-					bold = !bold;
-					i += 2;
-				} else {
-					italic = !italic;
-					i += 1;
-				}
-				
-				component = "";
-			}
-			
-			component += chars[i];
-		}
-		
-		parsed_message.addComponent(new TextComponent(component, color, false, underlined, false, italic, bold));
-		return parsed_message;
-	}
-	
-	private static String isGetColor(char[] chars, int i) {
-		String color = ""; 
-		for(int j = i + 1; j < i + 7 && j < chars.length; j++) {
-			if(isColorChar(chars[j])) color += chars[j];
-			else break;
-		}
-			
-		if(color.length() < 3) return null;
-		if(color.length() < 6) color = color.substring(0, 3);
-		else color = color.substring(0, 6);
-		
-		return color;
-	}
-	
-	private static boolean isKey(char[] chars, int i, String key) {
-		if(i + key.length() >= chars.length) return false;
-		for(int j = 0; j < key.length(); j++) 
-			if(chars[i + j] != key.charAt(j)) return false;
-		return true;
-	}
-	
-	private static boolean isColorChar(char what) {
-		char[] check = HEX_CHARS.toCharArray();
-		for(int i = 0; i < check.length; i++)
-			if(check[i] == what) return true;
-		return false;
-	}
+
 	
 	
 	
@@ -229,7 +142,7 @@ public class Messenger {
 			//Create the packet
 			Object component = Reflector.METHOD_CACHE.get("b").invoke(null , message);
 			Object type[] = Reflector.getNMSClass("ChatMessageType").getEnumConstants();
-			Object packet = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("PacketPlayOutChat")).newInstance(component, type[0], player.getUniqueId());
+			Object packet = Reflector.CONSTRUCTOR_CACHE.get("PacketPlayOutChat").newInstance(component, type[0], player.getUniqueId());
 			
 			//Send the packet
 			return Packeteer.sendClientPacket(player, packet);
@@ -287,7 +200,7 @@ public class Messenger {
 			//Create the packet
 			Object header_component = Reflector.METHOD_CACHE.get("b").invoke(null, header);
 			Object footer_component = Reflector.METHOD_CACHE.get("b").invoke(null, footer);
-			Object packet = Reflector.CONSTRUCTOR_CACHE.get(Reflector.getNMSClass("PacketPlayOutPlayerListHeaderFooter")).newInstance();
+			Object packet = Reflector.CONSTRUCTOR_CACHE.get("PacketPlayOutPlayerListHeaderFooter").newInstance();
 			Reflector.getNMSClass("PacketPlayOutPlayerListHeaderFooter").getField("header").set(packet, header_component);
 			Reflector.getNMSClass("PacketPlayOutPlayerListHeaderFooter").getField("footer").set(packet, footer_component);
 			
