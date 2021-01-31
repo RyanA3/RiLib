@@ -1,5 +1,5 @@
-name: RiLib
-main: me.felnstaren.rilib.RiLib
+name: FeLib
+main: me.felnstaren.felib.FeLib
 version: 1.0.0a
 author: Felnstaren
 description: Library for a lot of my plugins
