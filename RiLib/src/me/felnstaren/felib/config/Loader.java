@@ -36,16 +36,23 @@ public class Loader {
 		if(!file.exists()) create(file);
 		
 		byte[] buffer;
+		try { buffer = read(new FileInputStream(file), file.getPath()); }
+		catch(Exception e) { buffer = new byte[0]; };
+		return buffer;
+	}
+	
+	private byte[] read(InputStream stream, String path) {
+		byte[] buffer;
+		if(stream == null) return new byte[0];
 		try {
-			InputStream initial_stream = new FileInputStream(file);
-			buffer = new byte[initial_stream.available()];
-			initial_stream.read(buffer);
-			initial_stream.close();
-			logger.log(Level.DEBUG, "File.READ " + file.getPath());
+			buffer = new byte[stream.available()];
+			stream.read(buffer);
+			stream.close();
+			logger.log(Level.DEBUG, "File.READ " + path);
 		} catch (Exception e) {
 			e.printStackTrace();
-			buffer = new byte[] {};
-			logger.log(Level.WARNING, "ERROR - Read File " + file.getPath());
+			buffer = new byte[0];
+			logger.log(Level.WARNING, "ERROR - Read File " + path);
 		}
 		
 		return buffer;
@@ -81,6 +88,11 @@ public class Loader {
 	public File copy(File copy, File template) {
 		write(copy, read(template));		
 		logger.log(Level.DEBUG, "COPY " + copy.getPath() + " TO " + template);
+		return copy;
+	}
+	
+	public File copy(File copy, InputStream template) {
+		write(copy, read(template, "resource"));
 		return copy;
 	}
 	
@@ -170,7 +182,7 @@ public class Loader {
 	 * @param template
 	 * @return
 	 */
-	public File mark(File file, File template) {
+	public File mark(File file, InputStream template) {
 		if(!file.exists()) copy(file, template);
 		return file;
 	}
@@ -182,8 +194,8 @@ public class Loader {
 	 * @param relative_path
 	 * @return
 	 */
-	public File resource(String relative_path) {
-		return new File(plugin.getClass().getResource(relative_path).getPath());
+	public InputStream resource(String relative_path) {
+		return plugin.getClass().getResourceAsStream(relative_path);
 	}
 	
 	/**
