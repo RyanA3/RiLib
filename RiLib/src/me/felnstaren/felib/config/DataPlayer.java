@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 
 public abstract class DataPlayer {
 	
-	private YamlConfiguration data;
-	private String path;
-	private UUID uuid;
+	protected YamlConfiguration data;
+	protected String path;
+	protected UUID uuid;
 	
 	public DataPlayer(UUID uuid) {
 		this.uuid = uuid;
@@ -23,9 +23,9 @@ public abstract class DataPlayer {
 		load();
 	}
 	
-	protected void finalize() throws Throwable {
+	/*protected void finalize() throws Throwable {
 		save();
-	}
+	}*/
 	
 	
 	protected abstract void load();
