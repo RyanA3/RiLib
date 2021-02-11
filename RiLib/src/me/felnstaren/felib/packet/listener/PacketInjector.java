@@ -27,6 +27,9 @@ public class PacketInjector implements Listener {
 		this.pman = new PacketEventManager();
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		
+		for(Player p : plugin.getServer().getOnlinePlayers())
+			register(p);
 	}
 	
 	

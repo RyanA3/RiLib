@@ -156,4 +156,24 @@ public final class Reflector {
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
+	public static Object newInstanceOf(String nmsclass, Object... params) {
+		Class<?> nmsclazz = getNMSClass(nmsclass);
+		
+		Class<?>[] paramclasses = new Class<?>[params.length];
+		for(int i = 0; i < params.length; i++) paramclasses[i] = params[i].getClass();
+		
+		Constructor<?> constructor = null;
+		if(CONSTRUCTOR_CACHE.containsKey(nmsclass)) constructor = CONSTRUCTOR_CACHE.get(nmsclass);
+		else {
+			try {
+				constructor = nmsclazz.getConstructor(paramclasses);
+				CONSTRUCTOR_CACHE.put(nmsclass, constructor);
+			} catch (Exception e) { e.printStackTrace(); }
+		}
+		if(constructor == null) return null;
+		
+		try { return constructor.newInstance(params); }
+		catch(Exception e) { e.printStackTrace(); return null; }
+	}
+	
 }
