@@ -11,14 +11,14 @@ public class MetadataPacketWrapper extends PacketWrapper {
 	}
 	
 	public List<?> getData() {
-		return (List<?>) Reflector.getDeclaredField(packet, "b");
+		return (List<?>) Reflector.getDeclaredFieldValue(packet, "b");
 	}
 	
 	public Object getDataItem() {
 		List<?> data = getData();
 		for(Object o : data) {
 			try { 
-				Object item_object = Reflector.getDeclaredField(o, "b");
+				Object item_object = Reflector.getDeclaredFieldValue(o, "b");
 				if(item_object instanceof Byte) return o;
 			} catch (Exception e) { continue; }
 		}
@@ -29,7 +29,7 @@ public class MetadataPacketWrapper extends PacketWrapper {
 	public byte getDataItemByte() {
 		Object item = getDataItem();
 		if(item == null) return -1;
-		return (byte) Reflector.getDeclaredField(item, "b");
+		return (byte) Reflector.getDeclaredFieldValue(item, "b");
 	}
 	
 	public void setDataItemByte(byte value) {

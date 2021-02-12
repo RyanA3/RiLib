@@ -36,7 +36,7 @@ public class PacketEvent implements Cancellable {
 	}
 	
 	public Object getPacketField(String field) {
-		return Reflector.getDeclaredField(packet, field);
+		return Reflector.getDeclaredFieldValue(packet, field);
 	}
 	
 	public void setPacketField(String field, Object value) {

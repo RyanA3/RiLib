@@ -81,8 +81,8 @@ public final class Reflector {
 		
 		FIELD_CACHE = new HashMap<String, Field>();
 		try {
-			FIELD_CACHE.put("EntityPlayer", getNMSClass("EntityPlayer").getField("playerConnection"));
-			FIELD_CACHE.put("MinecraftServer", getNMSClass("MinecraftServer").getField("recentTps"));
+			FIELD_CACHE.put("EntityPlayer:playerConnection", getNMSClass("EntityPlayer")   .getField("playerConnection"));
+			FIELD_CACHE.put("MinecraftServer:recentTps",     getNMSClass("MinecraftServer").getField("recentTps"));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -110,68 +110,115 @@ public final class Reflector {
 		}
 	}
 	
-	public static Object getDeclaredField(Object from, String field) {
-		try {
-			Field f = from.getClass().getDeclaredField(field);
-			f.setAccessible(true);
-			return f.get(from);
-		} catch (Exception e) { e.printStackTrace(); }
-		return null; 
+	/**
+	 * Gets the value a field is set to for the given object
+	 */
+	private static Object getFieldValue(Object from, Field field) {
+		if(field == null || from == null) return null;
+		try { return field.get(from); }
+		catch (Exception e) { e.printStackTrace(); }
+		return null;
 	}
 	
+	/**
+	 * Gets a declared field by name from a class or from the cache
+	 */
+	public static Field getDeclaredField(Object from, String field_name) {
+		Field field = FIELD_CACHE.get(from.getClass().getSimpleName() + ":" + field_name);
+		
+		if(field != null) 
+			return field;
+		
+		Class<?> clazz = from.getClass();
+		try { field = clazz.getDeclaredField(field_name); } 
+		catch (Exception e1) { 
+			try { field = clazz.getSuperclass().getDeclaredField(field_name); }
+			catch (Exception e2) { e2.printStackTrace(); return null; };
+		}
+		
+		if(field != null)
+			FIELD_CACHE.put(clazz.getSimpleName() + ":" + field_name, field);
+		return field;
+	}
+	
+	/**
+	 * Gets the value of a declared field by name for the given object
+	 */
+	public static Object getDeclaredFieldValue(Object from, String field_name) {
+		return getFieldValue(from, getDeclaredField(from, field_name)); 
+	}
+	
+	/**
+	 * Gets the value of a declared field by name contained within multiple other fields in the given object
+	 */
 	public static Object getDeclaredField(Object from, String... field_paths) {
 		try {
-			Field field = from.getClass().getField(field_paths[0]);
-			field.setAccessible(true);
+			Field field = getDeclaredField(from, field_paths[0]);
 			Object stored = from;
 			for(int i = 1; i < field_paths.length; i++) {
 				stored = field.get(stored);
-				field = stored.getClass().getDeclaredField(field_paths[i]);
-				field.setAccessible(true);
+				field = getDeclaredField(stored, field_paths[i]);
 			}
 			return field.get(stored);
 		} catch (Exception e) { e.printStackTrace(); }
 		return null;
 	}
 	
-	public static void setDeclaredField(Object from, String field, Object value) {
+	/**
+	 * Sets the value of the declared field by name for the given object
+	 */
+	public static void setDeclaredField(Object from, String field_name, Object value) {
 		try {
-			Field f = from.getClass().getDeclaredField(field);
-			f.setAccessible(true);
-			f.set(from, value);
+			Field field = getDeclaredField(from, field_name);
+			field.set(from, value);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Sets the value of a declared field by name contained within multiple other fields in the given object
+	 */
 	public static void setDeclaredField(Object from, Object value, String... field_paths) {
 		try {
-			Field field = from.getClass().getField(field_paths[0]);
-			field.setAccessible(true);
+			Field field = getDeclaredField(from, field_paths[0]);
 			Object stored = from;
 			for(int i = 1; i < field_paths.length; i++) {
 				stored = field.get(stored);
-				field = stored.getClass().getDeclaredField(field_paths[i]);
-				field.setAccessible(true);
+				field = getDeclaredField(stored, field_paths[i]);
 			}
 			field.set(stored, value);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Gets the constructor with the specified param types from the specified class or class cache
+	 */
+	public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... params) {
+		String key = clazz.getSimpleName() + ":";
+		for(Class<?> param : params) key += param.getSimpleName() + ",";
+		
+		Constructor<?> constructor = CONSTRUCTOR_CACHE.get(key);
+		
+		if(constructor != null) 
+			return constructor;
+		
+		try {
+			constructor = clazz.getConstructor(params);
+			CONSTRUCTOR_CACHE.put(key, constructor);
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		return constructor;
+	}
+	
+	/**
+	 * Creates a new instance of the specified class by name with the objects provided for parameters
+	 */
 	public static Object newInstanceOf(String nmsclass, Object... params) {
 		Class<?> nmsclazz = getNMSClass(nmsclass);
-		
 		Class<?>[] paramclasses = new Class<?>[params.length];
 		for(int i = 0; i < params.length; i++) paramclasses[i] = params[i].getClass();
 		
-		Constructor<?> constructor = null;
-		if(CONSTRUCTOR_CACHE.containsKey(nmsclass)) constructor = CONSTRUCTOR_CACHE.get(nmsclass);
-		else {
-			try {
-				constructor = nmsclazz.getConstructor(paramclasses);
-				CONSTRUCTOR_CACHE.put(nmsclass, constructor);
-			} catch (Exception e) { e.printStackTrace(); }
-		}
+		Constructor<?> constructor = getConstructor(nmsclazz, paramclasses);
 		if(constructor == null) return null;
-		
 		try { return constructor.newInstance(params); }
 		catch(Exception e) { e.printStackTrace(); return null; }
 	}

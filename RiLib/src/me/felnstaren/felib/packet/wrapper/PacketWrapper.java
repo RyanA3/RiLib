@@ -21,7 +21,7 @@ public class PacketWrapper {
 	}
 	
 	public Object get(String field) {
-		return Reflector.getDeclaredField(packet, field);
+		return Reflector.getDeclaredFieldValue(packet, field);
 	}
 	
 	public Object get(String... fields) {
