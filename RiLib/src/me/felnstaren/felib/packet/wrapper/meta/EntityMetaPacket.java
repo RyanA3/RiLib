@@ -1,30 +1,30 @@
 package me.felnstaren.felib.packet.wrapper.meta;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 
 import me.felnstaren.felib.FeLib;
 import me.felnstaren.felib.logger.Level;
 import me.felnstaren.felib.packet.PacketEntityPose;
 import me.felnstaren.felib.packet.wrapper.PacketWrapper;
+import me.felnstaren.felib.packet.wrapper.data.DataWatcherWrapper;
 import me.felnstaren.felib.reflect.Reflector;
 import me.felnstaren.felib.util.BitMaskUtil;
-import net.minecraft.server.v1_16_R3.ChatComponentText;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.DataWatcherObject;
-import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R3.IChatBaseComponent;
-import net.minecraft.server.v1_16_R3.PacketPlayOutEntityMetadata;
 
 public class EntityMetaPacket extends PacketWrapper {
 
+	protected DataWatcherWrapper watcher;
+	
+	/**
+	 * Editing a packet this way will only affect the packet
+	 */
 	public EntityMetaPacket(Object packet) {
 		super(packet);
-		
 		FeLib.LOGGER.log(Level.DEBUG, packet.getClass().getSimpleName());
-		List<?> datas = getDataWatchers();
+		List<?> datas = getWatchedValues();
+		this.watcher = new DataWatcherWrapper(datas);
+		
 		for(int i = 0; i < datas.size(); i++) {
 			Object data = datas.get(i);
 			Class<?> valuetype = Reflector.getDeclaredFieldValue(data, "b").getClass();
@@ -32,36 +32,37 @@ public class EntityMetaPacket extends PacketWrapper {
 		}
 	}
 	
-	public EntityMetaPacket(int entity_id, Player player) {
+	/**
+	 * Editing a packet this way will only affect the packet
+	 */
+	public EntityMetaPacket(int entity_id, DataWatcherWrapper watcher) {
 		super(null);
-		
-		DataWatcher watcher = new DataWatcher(null);
-		watcher.register(new DataWatcherObject<Byte>(0, DataWatcherRegistry.a), (byte) 0b00000000);
-		//watcher.register(new DataWatcherObject<Integer>(1, DataWatcherRegistry.b), 0);
-		watcher.register(new DataWatcherObject<Optional<IChatBaseComponent>>(2, DataWatcherRegistry.f), Optional.of(new ChatComponentText("Scuffed")));
-		watcher.register(new DataWatcherObject<Boolean>(3, DataWatcherRegistry.i), true);
-		//watcher.register(new DataWatcherObject<Boolean>(4, DataWatcherRegistry.i), false);
-		watcher.register(new DataWatcherObject<Boolean>(5, DataWatcherRegistry.i), true);
-		//watcher.register(new DataWatcherObject<EntityPose>(6, DataWatcherRegistry.s), EntityPose.SLEEPING);
-		//watcher.register(new DataWatcherObject<Byte>(7, DataWatcherRegistry.a), (byte) 0b00000111);
-		//watcher.register(new DataWatcherObject<Byte>(16, DataWatcherRegistry.a), (byte) 0b00000000);
-		watcher.register(new DataWatcherObject<Integer>(18, DataWatcherRegistry.b), 1024);
-		PacketPlayOutEntityMetadata pac = new PacketPlayOutEntityMetadata(entity_id, watcher, true);
-		Reflector.setDeclaredFieldValue(pac, "a", entity_id);
-		
-		this.packet = pac;
+		this.watcher = watcher;
+		this.packet = Reflector.newInstanceOf("PacketPlayOutEntityMetadata", new Class<?>[] { int.class, Reflector.getNMSClass("DataWatcher"), boolean.class }, new Object[] { entity_id, watcher.getDataWatcher(), true } );
+	}
+	
+	/**
+	 * Editing a packet this way will affect the entity's data as well
+	 */
+	public EntityMetaPacket(Entity entity) {
+		super(entity.getEntityId());
+		this.watcher = new DataWatcherWrapper(entity);
 	}
 	
 	
 	
-	public List<?> getDataWatchers() {
+	public List<?> getWatchedValues() {
 		return (List<?>) Reflector.getDeclaredFieldValue(packet, "b");
+	}
+	
+	public DataWatcherWrapper getDataWatcher() {
+		return watcher;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <T> T getData(int index, Class<?> T, T defalt) {
-		if(index >= getDataWatchers().size()) return defalt;
-		Object data_watcher = getDataWatchers().get(index);
+		if(index >= getWatchedValues().size()) return defalt;
+		Object data_watcher = getWatchedValues().get(index);
 		Object value = Reflector.getDeclaredFieldValue(data_watcher, "b");
 		if(value.getClass() != T) return defalt;
 		try { return (T) value; }
@@ -69,8 +70,8 @@ public class EntityMetaPacket extends PacketWrapper {
 	}
 	
 	public void setData(int index, Object value) {
-		if(index >= getDataWatchers().size()) return;
-		Object data_watcher = getDataWatchers().get(index);
+		if(index >= getWatchedValues().size()) return;
+		Object data_watcher = getWatchedValues().get(index);
 		if(Reflector.getDeclaredFieldValue(data_watcher, "b").getClass() != value.getClass()) return;
 		Reflector.setDeclaredFieldValue(data_watcher, "b", value);
 		FeLib.LOGGER.log(Level.DEBUG, "Success set data");

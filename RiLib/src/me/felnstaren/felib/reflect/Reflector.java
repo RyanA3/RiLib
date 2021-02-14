@@ -9,6 +9,9 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
+import me.felnstaren.felib.FeLib;
+import me.felnstaren.felib.logger.Level;
+
 /**
  * Reflector Class
  * @author Ryan
@@ -219,6 +222,20 @@ public final class Reflector {
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
+	public static Object getDeclaredStaticFieldValue(Class<?> from, Field field) {
+		if(field == null || from == null) return null;
+		try { return field.get(from); }
+		catch (Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	public static Object getDeclaredStaticFieldValue(String from_name, String field_name) {
+		Class<?> from = getNMSClass(from_name);
+		return getDeclaredStaticFieldValue(from, getDeclaredField(from, field_name));
+	}
+	
+
+	
 	
 	
 	
@@ -289,9 +306,11 @@ public final class Reflector {
 			return method;
 		}
 		
-		try { method = from.getDeclaredMethod(name); } 
+		FeLib.LOGGER.log(Level.DEBUG, "Try Locate Method: " + key);
+		
+		try { method = from.getDeclaredMethod(name, param_types); } 
 		catch (Exception e1) { 
-			try { method = from.getSuperclass().getDeclaredMethod(name); }
+			try { method = from.getSuperclass().getDeclaredMethod(name, param_types); }
 			catch (Exception e2) { e2.printStackTrace(); return null; };
 		}
 		
@@ -317,7 +336,9 @@ public final class Reflector {
 	}
 	
 	public static Object invokeDeclaredMethod(Object container, String name, Object... params) {
-		return invokeDeclaredMethod(container.getClass(), name, container, params);
+		Class<?>[] param_types = new Class<?>[params.length];
+		for(int i = 0; i < params.length; i++) param_types[i] = params.getClass();
+		return invokeDeclaredMethod(container.getClass(), name, container, param_types, params);
 	}
 	
 	public static Object invokeDeclaredStaticMethod(Class<?> from, String name, Object... params) {
