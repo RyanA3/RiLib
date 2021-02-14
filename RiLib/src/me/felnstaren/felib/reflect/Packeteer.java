@@ -58,7 +58,7 @@ public class Packeteer {
 	public static Object getPlayerConnection(Player player) throws Exception {
 		Object craft_player = Reflector.getNMSClass("CraftPlayer").cast(player);
 		Object entity_player = Reflector.METHOD_CACHE.get("getHandle").invoke(craft_player);
-		return Reflector.FIELD_CACHE.get("EntityPlayer").get(entity_player);
+		return Reflector.FIELD_CACHE.get("EntityPlayer:playerConnection").get(entity_player);
 	}
 	
 	/**

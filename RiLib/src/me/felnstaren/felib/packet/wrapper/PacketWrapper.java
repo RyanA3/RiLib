@@ -13,11 +13,11 @@ public class PacketWrapper {
 	
 	
 	public void set(String field, Object value) {
-		Reflector.setDeclaredField(packet, field, value);
+		Reflector.setDeclaredFieldValue(packet, field, value);
 	}
 	
 	public void set(Object value, String... fields) {
-		Reflector.setDeclaredField(packet, value, fields);
+		Reflector.setDeclaredFieldsValue(packet, value, fields);
 	}
 	
 	public Object get(String field) {
@@ -25,7 +25,7 @@ public class PacketWrapper {
 	}
 	
 	public Object get(String... fields) {
-		return Reflector.getDeclaredField(packet, fields);
+		return Reflector.getDeclaredFieldsValue(packet, fields);
 	}
 	
 	public Object getPacket() {

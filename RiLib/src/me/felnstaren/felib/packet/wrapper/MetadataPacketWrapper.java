@@ -34,7 +34,7 @@ public class MetadataPacketWrapper extends PacketWrapper {
 	
 	public void setDataItemByte(byte value) {
 		Object item = getDataItem();
-		Reflector.setDeclaredField(item, "b", value);
+		Reflector.setDeclaredFieldValue(item, "b", value);
 	}
 	
 	public void setByteProperty(int shift, int value) {

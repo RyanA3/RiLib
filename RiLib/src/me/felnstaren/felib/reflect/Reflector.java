@@ -24,7 +24,7 @@ public final class Reflector {
 	public static final Map< String,   Method         >   METHOD_CACHE;
 	public static final Map< String,   Constructor<?> >   CONSTRUCTOR_CACHE;
 	public static final Map< String,   Field          >   FIELD_CACHE;
-
+ 
 	static {
 		VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		
@@ -81,8 +81,14 @@ public final class Reflector {
 		
 		FIELD_CACHE = new HashMap<String, Field>();
 		try {
+			Field entity_id_packet = getNMSClass("PacketPlayOutEntity").getDeclaredField("a");
+			
 			FIELD_CACHE.put("EntityPlayer:playerConnection", getNMSClass("EntityPlayer")   .getField("playerConnection"));
 			FIELD_CACHE.put("MinecraftServer:recentTps",     getNMSClass("MinecraftServer").getField("recentTps"));
+			FIELD_CACHE.put("PacketPlayOutEntity:a", entity_id_packet);
+			FIELD_CACHE.put("PacketPlayOutEntityLook:a", entity_id_packet);
+			FIELD_CACHE.put("PacketPlayOutRelEntityMove:a", entity_id_packet);
+			FIELD_CACHE.put("PacketPlayOutRelEntityMoveLook:a", entity_id_packet);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -110,117 +116,218 @@ public final class Reflector {
 		}
 	}
 	
+
+	
 	/**
-	 * Gets the value a field is set to for the given object
+	 * Gets the key to store a class's method
 	 */
-	private static Object getFieldValue(Object from, Field field) {
+	private static String getMethodKey(Class<?> from, String method_name, Class<?>... param_types) {
+		String key = from.getSimpleName() + ":" + method_name + ":";
+		for(Class<?> param : param_types) key += param.getSimpleName() + ",";
+		return key;
+	}
+	
+	/**
+	 * Gets the key to store a class's constructor
+	 */
+	private static String getConstructorKey(Class<?> from, Class<?>... param_types) {
+		String key = from.getSimpleName() + ":";
+		for(Class<?> param : param_types) key += param.getSimpleName() + ",";
+		return key;
+	}
+	
+	/**
+	 * Gets the key to store a class's field
+	 */
+	private static String getFieldKey(Class<?> from, String field_name) {
+		return from.getSimpleName() + ":" + field_name;
+	}
+	
+	
+	
+	
+	
+	/*
+	 * |=============================|
+	 * |   FIELD GETTING / SETTING   |
+	 * |=============================|
+	 */
+	
+	public static Field getDeclaredField(Class<?> from, String field_name) {
+		String key = getFieldKey(from, field_name);
+		Field field = FIELD_CACHE.get(key);
+		
+		if(field != null) { //First Time?
+			field.setAccessible(true);
+			return field;
+		}
+		
+		try { field = from.getDeclaredField(field_name); } 
+		catch (Exception e1) { 
+			try { field = from.getSuperclass().getDeclaredField(field_name); }
+			catch (Exception e2) { e2.printStackTrace(); return null; };
+		}
+		
+		if(field != null) {
+			FIELD_CACHE.put(key, field);
+			field.setAccessible(true);
+		}
+		
+		return field;
+	}
+	
+	public static Object getDeclaredFieldValue(Object from, Field field) {
 		if(field == null || from == null) return null;
 		try { return field.get(from); }
 		catch (Exception e) { e.printStackTrace(); }
 		return null;
 	}
 	
-	/**
-	 * Gets a declared field by name from a class or from the cache
-	 */
-	public static Field getDeclaredField(Object from, String field_name) {
-		Field field = FIELD_CACHE.get(from.getClass().getSimpleName() + ":" + field_name);
-		
-		if(field != null) 
-			return field;
-		
-		Class<?> clazz = from.getClass();
-		try { field = clazz.getDeclaredField(field_name); } 
-		catch (Exception e1) { 
-			try { field = clazz.getSuperclass().getDeclaredField(field_name); }
-			catch (Exception e2) { e2.printStackTrace(); return null; };
-		}
-		
-		if(field != null)
-			FIELD_CACHE.put(clazz.getSimpleName() + ":" + field_name, field);
-		return field;
-	}
-	
-	/**
-	 * Gets the value of a declared field by name for the given object
-	 */
 	public static Object getDeclaredFieldValue(Object from, String field_name) {
-		return getFieldValue(from, getDeclaredField(from, field_name)); 
+		return getDeclaredFieldValue(from, getDeclaredField(from.getClass(), field_name)); 
 	}
 	
-	/**
-	 * Gets the value of a declared field by name contained within multiple other fields in the given object
-	 */
-	public static Object getDeclaredField(Object from, String... field_paths) {
+	public static Object getDeclaredFieldsValue(Object from, String... field_paths) {
 		try {
-			Field field = getDeclaredField(from, field_paths[0]);
+			Field field = getDeclaredField(from.getClass(), field_paths[0]);
 			Object stored = from;
 			for(int i = 1; i < field_paths.length; i++) {
 				stored = field.get(stored);
-				field = getDeclaredField(stored, field_paths[i]);
+				field = getDeclaredField(stored.getClass(), field_paths[i]);
 			}
 			return field.get(stored);
 		} catch (Exception e) { e.printStackTrace(); }
 		return null;
 	}
 	
-	/**
-	 * Sets the value of the declared field by name for the given object
-	 */
-	public static void setDeclaredField(Object from, String field_name, Object value) {
+	public static void setDeclaredFieldValue(Object from, String field_name, Object value) {
 		try {
-			Field field = getDeclaredField(from, field_name);
+			Field field = getDeclaredField(from.getClass(), field_name);
 			field.set(from, value);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
-	
-	/**
-	 * Sets the value of a declared field by name contained within multiple other fields in the given object
-	 */
-	public static void setDeclaredField(Object from, Object value, String... field_paths) {
+
+	public static void setDeclaredFieldsValue(Object from, Object value, String... field_paths) {
 		try {
-			Field field = getDeclaredField(from, field_paths[0]);
+			Field field = getDeclaredField(from.getClass(), field_paths[0]);
 			Object stored = from;
 			for(int i = 1; i < field_paths.length; i++) {
 				stored = field.get(stored);
-				field = getDeclaredField(stored, field_paths[i]);
+				field = getDeclaredField(stored.getClass(), field_paths[i]);
 			}
 			field.set(stored, value);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	/**
-	 * Gets the constructor with the specified param types from the specified class or class cache
+	
+	
+	
+	
+	/** 
+	 *  |==================|
+	 *  |   CONSTRUCTION   |
+	 *  |==================|
 	 */
-	public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... params) {
-		String key = clazz.getSimpleName() + ":";
-		for(Class<?> param : params) key += param.getSimpleName() + ",";
-		
+	
+	public static Constructor<?> getConstructor(Class<?> from, Class<?>... param_types) {
+		String key = getConstructorKey(from, param_types);
 		Constructor<?> constructor = CONSTRUCTOR_CACHE.get(key);
 		
-		if(constructor != null) 
+		if(constructor != null) {
+			constructor.setAccessible(true);
 			return constructor;
+		}
 		
 		try {
-			constructor = clazz.getConstructor(params);
+			constructor = from.getConstructor(param_types);
+			constructor.setAccessible(true);
 			CONSTRUCTOR_CACHE.put(key, constructor);
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		return constructor;
 	}
 	
-	/**
-	 * Creates a new instance of the specified class by name with the objects provided for parameters
-	 */
-	public static Object newInstanceOf(String nmsclass, Object... params) {
-		Class<?> nmsclazz = getNMSClass(nmsclass);
-		Class<?>[] paramclasses = new Class<?>[params.length];
-		for(int i = 0; i < params.length; i++) paramclasses[i] = params[i].getClass();
-		
-		Constructor<?> constructor = getConstructor(nmsclazz, paramclasses);
+	public static Object newInstanceOf(Class<?> nmsclass, Class<?>[] paramclasses, Object[] params) {
+		Constructor<?> constructor = getConstructor(nmsclass, paramclasses);
 		if(constructor == null) return null;
 		try { return constructor.newInstance(params); }
-		catch(Exception e) { e.printStackTrace(); return null; }
+		catch (Exception e) { e.printStackTrace(); return null; }
+	}
+	
+	public static Object newInstanceOf(String nmsclass, Object... params) {
+		Class<?>[] paramclasses = new Class<?>[params.length];
+		for(int i = 0; i < params.length; i++) paramclasses[i] = params[i].getClass();
+		return newInstanceOf(getNMSClass(nmsclass), paramclasses, params);
+	}
+	
+	public static Object newInstanceOf(String nmsclass, Class<?>[] paramclasses, Object[] params) {
+		return newInstanceOf(getNMSClass(nmsclass), paramclasses, params);
+	}
+	
+	public static Object newInstanceOf(String nmsclass, String[] paramclassnames, Object[] params) {
+		Class<?>[] paramclasses = new Class<?>[paramclassnames.length];
+		for(int i = 0; i < paramclassnames.length; i++) paramclasses[i] = getNMSClass(paramclassnames[i]);
+		return newInstanceOf(getNMSClass(nmsclass), paramclasses, params);
+	}
+	
+	
+	
+	
+	
+	/*
+	 * |=======================|
+	 * |   METHOD INVOCATION   |
+	 * |=======================|
+	 */
+	
+	public static Method getDeclaredMethod(Class<?> from, String name, Class<?>... param_types) {
+		String key = getMethodKey(from, name, param_types);
+		Method method = METHOD_CACHE.get(key);
+		
+		if(method != null) { //First Time?
+			method.setAccessible(true);
+			return method;
+		}
+		
+		try { method = from.getDeclaredMethod(name); } 
+		catch (Exception e1) { 
+			try { method = from.getSuperclass().getDeclaredMethod(name); }
+			catch (Exception e2) { e2.printStackTrace(); return null; };
+		}
+		
+		if(method != null) {
+			METHOD_CACHE.put(key, method);
+			method.setAccessible(true);
+		}
+		
+		return method;
+	}
+	
+	public static Object invokeDeclaredMethod(Class<?> from, String name, Object container, Class<?>[] param_types, Object[] params) {
+		Method method = getDeclaredMethod(from, name, param_types);
+		if(method == null) return null;
+		try { return method.invoke(container, params); }
+		catch (Exception e) { e.printStackTrace(); return null; }
+	}
+	
+	public static Object invokeDeclaredMethod(Object container, String name, String[] param_type_names, Object[] params) {
+		Class<?>[] param_types = new Class<?>[param_type_names.length];
+		for(int i = 0; i < param_type_names.length; i++) param_types[i] = getNMSClass(param_type_names[i]);
+		return invokeDeclaredMethod(container.getClass(), name, container, param_types, params);
+	}
+	
+	public static Object invokeDeclaredMethod(Object container, String name, Object... params) {
+		return invokeDeclaredMethod(container.getClass(), name, container, params);
+	}
+	
+	public static Object invokeDeclaredStaticMethod(Class<?> from, String name, Object... params) {
+		Class<?>[] param_types = new Class<?>[params.length];
+		for(int i = 0; i < params.length; i++) param_types[i] = params.getClass();
+		return invokeDeclaredMethod(from, name, from, params, param_types);
+	}
+	
+	public static Object invokeDeclaredStaticMethod(String from, String name, Object... params) {
+		return invokeDeclaredStaticMethod(getNMSClass(from), name, params);
 	}
 	
 }

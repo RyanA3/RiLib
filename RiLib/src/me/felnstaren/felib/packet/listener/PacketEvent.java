@@ -1,6 +1,7 @@
 package me.felnstaren.felib.packet.listener;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -35,12 +36,24 @@ public class PacketEvent implements Cancellable {
 		return packet.getClass().getSimpleName().equalsIgnoreCase(name);
 	}
 	
+	public boolean isPacket(ArrayList<String> names) {
+		for(String name : names)
+			if(isPacket(name)) return true;
+		return false;
+	}
+	
+	public boolean isPacket(String... names) {
+		for(String name : names)
+			if(isPacket(name)) return true;
+		return false;
+	}
+	
 	public Object getPacketField(String field) {
 		return Reflector.getDeclaredFieldValue(packet, field);
 	}
 	
 	public void setPacketField(String field, Object value) {
-		Reflector.setDeclaredField(packet, field, value);
+		Reflector.setDeclaredFieldValue(packet, field, value);
 	}
 	
 	public Field[] getPacketFields() {
