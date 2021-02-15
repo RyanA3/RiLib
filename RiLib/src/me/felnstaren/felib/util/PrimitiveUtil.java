@@ -12,6 +12,7 @@ public class PrimitiveUtil {
 		PRIMITIVES.add(short.class); WRAPPERS.add(Short.class);
 		PRIMITIVES.add(long.class); WRAPPERS.add(Long.class);
 		PRIMITIVES.add(boolean.class); WRAPPERS.add(Boolean.class);
+		PRIMITIVES.add(float.class); WRAPPERS.add(Float.class);
 	}
 	
 	public static Class<?> getPrimitiveVersion(Class<?> wrapper) {

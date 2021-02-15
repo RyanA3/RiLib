@@ -1,55 +1,39 @@
 package me.felnstaren.felib.packet.wrapper.data;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 
+import me.felnstaren.felib.packet.enums.MetadataValue;
 import me.felnstaren.felib.reflect.Reflector;
 
 public class DataWatcherWrapper {
-	
-	private static final HashMap<Class<?>, Object> SERIALIZERS = new HashMap<Class<?>, Object>();
-	static {
-		SERIALIZERS.put(Byte.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "a"));
-		SERIALIZERS.put(Integer.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "b"));
-		SERIALIZERS.put(Float.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "c"));
-		SERIALIZERS.put(String.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "d"));
-		SERIALIZERS.put(Reflector.getNMSClass("IChatBaseComponent"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "e"));
-		SERIALIZERS.put(Reflector.getNMSClass("ItemStack"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "g"));
-		SERIALIZERS.put(Boolean.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "i"));
-		SERIALIZERS.put(Reflector.getNMSClass("ParticleParam"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "j"));
-		SERIALIZERS.put(Reflector.getNMSClass("Vector3f"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "k"));
-		SERIALIZERS.put(Reflector.getNMSClass("BlockPosition"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "l"));
-		SERIALIZERS.put(Reflector.getNMSClass("EnumDirection"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "n"));
-		SERIALIZERS.put(Reflector.getNMSClass("NBTTagCompound"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "p"));
-		SERIALIZERS.put(Reflector.getNMSClass("VillagerData"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "q"));
-		SERIALIZERS.put(Reflector.getNMSClass("EntityPose"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "s"));
-	}
-	
-	private static final HashMap<Class<?>, Object> OPTIONAL_SERIALIZERS = new HashMap<Class<?>, Object>();
-	static {
-		OPTIONAL_SERIALIZERS.put(Reflector.getNMSClass("IChatBaseComponent"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "f"));
-		OPTIONAL_SERIALIZERS.put(Reflector.getNMSClass("IBlockData"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "h"));
-		OPTIONAL_SERIALIZERS.put(Reflector.getNMSClass("BlockPosition"), Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "m"));
-		OPTIONAL_SERIALIZERS.put(UUID.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "o"));
-		OPTIONAL_SERIALIZERS.put(Integer.class, Reflector.getDeclaredStaticFieldValue("DataWatcherRegistry", "r"));
-	}
 
+	private static final Method WATCHER_REGISTER_METHOD = Reflector.getDeclaredMethod(Reflector.getNMSClass("DataWatcher"), "register", Reflector.getNMSClass("DataWatcherObject"), Object.class);
+	private static final Method WATCHER_SET_METHOD = Reflector.getDeclaredMethod(Reflector.getNMSClass("DataWatcher"), "set", Reflector.getNMSClass("DataWatcherObject"), Object.class);
+	private static final Method WATCHER_GET_METHOD = Reflector.getDeclaredMethod(Reflector.getNMSClass("DataWatcher"), "get", Reflector.getNMSClass("DataWatcherObject"));
+	private static final Constructor<?> WATCHER_CONSTRUCTOR = Reflector.getConstructor(Reflector.getNMSClass("DataWatcher"), Reflector.getNMSClass("Entity"));
+	private static final Constructor<?> WATCHER_OBJECT_CONSTRUCTOR = Reflector.getConstructor(Reflector.getNMSClass("DataWatcherObject"), int.class, Reflector.getNMSClass("DataWatcherSerializer"));
+	
+	
+	
 	private Object watcher;
+	private HashMap<Integer, Object> watcher_objects = new HashMap<Integer, Object>();
 	
 	/**
 	 * Set @boolean construct to true to create a new data watcher for the entity @Object value
 	 * Set @boolean construct to false to use a specified data watcher ( @Object value )
 	 */
 	public DataWatcherWrapper(Object value, boolean construct) {
-		if(construct) this.watcher = Reflector.newInstanceOf("DataWatcher", new Class<?>[]{ Reflector.getNMSClass("Entity") }, new Object[] { value });
+		if(construct) this.watcher = Reflector.newInstanceOf(WATCHER_CONSTRUCTOR, value); //this.watcher = Reflector.newInstanceOf("DataWatcher", new Class<?>[]{ Reflector.getNMSClass("Entity") }, new Object[] { value });
 		else this.watcher = value;
 	}
 	
 	/**
+	 * Loads specified entity's data watcher, this will edit the real data values
 	 */
 	public DataWatcherWrapper(Entity entity) {
 		Object craft_entity = Reflector.getNMSClass("CraftEntity").cast(entity);
@@ -58,36 +42,47 @@ public class DataWatcherWrapper {
 	}
 	
 	/**
-	 * Loads values into a new data watcher
+	 * Loads values into a new, fake data watcher
 	 */
-	public DataWatcherWrapper(List<?> data_watcher_items) {
+	public DataWatcherWrapper(List<?> watched_items) {
 		this(null, true);
-		for(int i = 0; i < data_watcher_items.size(); i++)
-			if(data_watcher_items.get(i) != null) register(i, Reflector.getDeclaredFieldValue(data_watcher_items.get(i), "b"));
+		for(Object watched_item : watched_items)
+			register(Reflector.getDeclaredFieldValue(watched_item, "a"), Reflector.getDeclaredFieldValue(watched_item, "b"));
+		
 	}
 	
 	
 	
-	private Object getSerializerFor(Object what) {
-		if(what instanceof Optional) {
-			Optional<?> option = (Optional<?>) what;
-			Object serializer = OPTIONAL_SERIALIZERS.get(option.get().getClass());
-			if(serializer != null) return serializer;
-			for(Class<?> possible_serializer : OPTIONAL_SERIALIZERS.keySet()) if(possible_serializer.isAssignableFrom(option.get().getClass())) return OPTIONAL_SERIALIZERS.get(possible_serializer);
-			return serializer;
-		}
-		else {
-			Object serializer = SERIALIZERS.get(what.getClass());
-			if(serializer != null) return SERIALIZERS.get(what.getClass());
-			for(Class<?> possible_serializer : SERIALIZERS.keySet()) if(possible_serializer.isAssignableFrom(what.getClass())) return SERIALIZERS.get(possible_serializer);
-			return serializer;
-		}
+	public void register(Object watcher_object, Object value) {
+		Reflector.invokeMethod(WATCHER_REGISTER_METHOD, watcher, watcher_object, value);
 	}
 	
-	public void register(int index, Object value) {
-		Object serializer = getSerializerFor(value);
-		Object watcher_object = Reflector.newInstanceOf("DataWatcherObject", new Class<?>[]{ int.class, Reflector.getNMSClass("DataWatcherSerializer") }, new Object[]{ index, serializer });
-		Reflector.invokeDeclaredMethod(Reflector.getNMSClass("DataWatcher"), "register", watcher, new Class<?>[] { Reflector.getNMSClass("DataWatcherObject"), Object.class }, new Object[] { watcher_object, value });
+	public void register(MetadataValue type, Object value) {
+		Object serializer = type.getSerializer().getNMSSerializer();
+		Object watcher_object = Reflector.newInstanceOf(WATCHER_OBJECT_CONSTRUCTOR, type.getIndex(), serializer);
+		watcher_objects.put(type.getIndex(), watcher_object);
+		register(watcher_object, value);
+	}
+	
+	public void set(Object watcher_object, Object value) {
+		Reflector.invokeMethod(WATCHER_SET_METHOD, watcher, watcher_object, value);
+	}
+	
+	public void set(MetadataValue type, Object value) {
+		Object watcher_object = watcher_objects.get(type.getIndex());
+		if(value == null) value = type.getDefaultValue();
+		if(watcher_object == null) register(type.getIndex(), value);
+		else set(watcher_object, value);
+	}
+	
+	public Object get(Object watcher_object) {
+		return Reflector.invokeMethod(WATCHER_GET_METHOD, watcher, watcher_object);
+	}
+	
+	public Object get(MetadataValue type) {
+		Object watcher_object = watcher_objects.get(type.getIndex());
+		if(watcher_object == null) return type.getDefaultValue();
+		else return get(watcher_object);
 	}
 	
 	

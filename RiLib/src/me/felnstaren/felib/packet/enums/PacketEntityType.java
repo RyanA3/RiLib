@@ -1,4 +1,4 @@
-package me.felnstaren.felib.packet;
+package me.felnstaren.felib.packet.enums;
 
 public enum PacketEntityType {
 

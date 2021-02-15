@@ -24,6 +24,14 @@ public class BitMaskUtil {
 	}
 	
 	/**
+	 * Disables the xth bit
+	 */
+	public static byte disable(byte mask, int bit_index) {
+		byte bit = (byte) (1 << bit_index);
+		return disable(mask, bit);
+	}
+	
+	/**
 	 * Toggles the xth bit
 	 */
 	public static byte toggle(byte mask, int bit_index) {

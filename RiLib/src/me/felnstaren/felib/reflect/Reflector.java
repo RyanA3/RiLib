@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 
 import me.felnstaren.felib.FeLib;
 import me.felnstaren.felib.logger.Level;
+import me.felnstaren.felib.util.PrimitiveUtil;
 
 /**
  * Reflector Class
@@ -259,16 +260,27 @@ public final class Reflector {
 			constructor = from.getConstructor(param_types);
 			constructor.setAccessible(true);
 			CONSTRUCTOR_CACHE.put(key, constructor);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { 
+			try {
+				for(int i = 0; i < param_types.length; i++) param_types[i] = PrimitiveUtil.getPrimitiveVersion(param_types[i]);
+				constructor = from.getConstructor(param_types);
+				constructor.setAccessible(true);
+				CONSTRUCTOR_CACHE.put(key, constructor);
+			} catch (Exception e2) { e2.printStackTrace(); }
+		}
 		
 		return constructor;
 	}
 	
-	public static Object newInstanceOf(Class<?> nmsclass, Class<?>[] paramclasses, Object[] params) {
-		Constructor<?> constructor = getConstructor(nmsclass, paramclasses);
+	public static Object newInstanceOf(Constructor<?> constructor, Object... params) {
 		if(constructor == null) return null;
 		try { return constructor.newInstance(params); }
 		catch (Exception e) { e.printStackTrace(); return null; }
+	}
+	
+	public static Object newInstanceOf(Class<?> nmsclass, Class<?>[] paramclasses, Object[] params) {
+		Constructor<?> constructor = getConstructor(nmsclass, paramclasses);
+		return newInstanceOf(constructor, params);
 	}
 	
 	public static Object newInstanceOf(String nmsclass, Object... params) {
@@ -322,11 +334,15 @@ public final class Reflector {
 		return method;
 	}
 	
-	public static Object invokeDeclaredMethod(Class<?> from, String name, Object container, Class<?>[] param_types, Object[] params) {
-		Method method = getDeclaredMethod(from, name, param_types);
+	public static Object invokeMethod(Method method, Object container, Object... params) {
 		if(method == null) return null;
 		try { return method.invoke(container, params); }
 		catch (Exception e) { e.printStackTrace(); return null; }
+	}
+	
+	public static Object invokeDeclaredMethod(Class<?> from, String name, Object container, Class<?>[] param_types, Object[] params) {
+		Method method = getDeclaredMethod(from, name, param_types);
+		return invokeMethod(method, container, params);
 	}
 	
 	public static Object invokeDeclaredMethod(Object container, String name, String[] param_type_names, Object[] params) {
