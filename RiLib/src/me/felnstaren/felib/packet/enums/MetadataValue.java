@@ -13,7 +13,7 @@ public enum MetadataValue {
 	ENTITY_IS_CUSTOM_NAME_VISIBLE(3, boolean.class, false),
 	ENTITY_IS_SILENT(4, boolean.class, false),
 	ENTITY_IS_NO_GRAVITY(5, boolean.class, false),
-	ENTITY_POSE(6, Reflector.getNMSClass("EntityPose"), PacketEntityPose.STANDING.toNMS(), PacketSerializer.ENTITY_POSE),
+	ENTITY_POSE(6, Reflector.getNMSClass("EntityPose"), PacketEntityPose.STANDING.getNMSPose(), PacketSerializer.ENTITY_POSE),
 	
 	FALLING_BLOCK_BLOCK_POSE(7, Reflector.getNMSClass("BlockPosition"), Reflector.newInstanceOf("BlockPosition", 0, 0, 0), PacketSerializer.BLOCK_POSITION),
 	
@@ -224,14 +224,14 @@ public enum MetadataValue {
 	private Object defalt;
 	private PacketSerializer serializer;
 	
-	private <T> MetadataValue(int index, Class<T> type, Object defalt) {
+	private MetadataValue(int index, Class<?> type, Object defalt) {
 		this.index = index;
 		this.type = type;
 		this.defalt = defalt;
 		this.serializer = PacketSerializer.getForType(PrimitiveUtil.getWrapperVersion(type));
 	}
 	
-	private <T> MetadataValue(int index, Class<T> type, Object defalt, PacketSerializer serializer) {
+	private MetadataValue(int index, Class<?> type, Object defalt, PacketSerializer serializer) {
 		this.index = index;
 		this.type = type;
 		this.defalt = defalt;

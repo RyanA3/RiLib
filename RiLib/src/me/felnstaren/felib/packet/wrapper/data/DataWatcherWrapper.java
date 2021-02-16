@@ -17,7 +17,7 @@ public class DataWatcherWrapper {
 	private static final Method WATCHER_GET_METHOD = Reflector.getDeclaredMethod(Reflector.getNMSClass("DataWatcher"), "get", Reflector.getNMSClass("DataWatcherObject"));
 	private static final Constructor<?> WATCHER_CONSTRUCTOR = Reflector.getConstructor(Reflector.getNMSClass("DataWatcher"), Reflector.getNMSClass("Entity"));
 	private static final Constructor<?> WATCHER_OBJECT_CONSTRUCTOR = Reflector.getConstructor(Reflector.getNMSClass("DataWatcherObject"), int.class, Reflector.getNMSClass("DataWatcherSerializer"));
-	
+	private static final Method CRAFT_ENTITY_GET_DATA_WATCHER = Reflector.METHOD_CACHE.get("getDataWatcher");
 	
 	
 	private Object watcher;
@@ -28,7 +28,7 @@ public class DataWatcherWrapper {
 	 * Set @boolean construct to false to use a specified data watcher ( @Object value )
 	 */
 	public DataWatcherWrapper(Object value, boolean construct) {
-		if(construct) this.watcher = Reflector.newInstanceOf(WATCHER_CONSTRUCTOR, value); //this.watcher = Reflector.newInstanceOf("DataWatcher", new Class<?>[]{ Reflector.getNMSClass("Entity") }, new Object[] { value });
+		if(construct) this.watcher = Reflector.newInstanceOf(WATCHER_CONSTRUCTOR, value);
 		else this.watcher = value;
 	}
 	
@@ -38,7 +38,7 @@ public class DataWatcherWrapper {
 	public DataWatcherWrapper(Entity entity) {
 		Object craft_entity = Reflector.getNMSClass("CraftEntity").cast(entity);
 		Object handle = Reflector.invokeDeclaredMethod(craft_entity, "getHandle");
-		this.watcher = Reflector.invokeDeclaredMethod(handle, "getDataWatcher");
+		this.watcher = Reflector.invokeMethod(CRAFT_ENTITY_GET_DATA_WATCHER, handle);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class DataWatcherWrapper {
 	
 	
 	
-	public Object getDataWatcher() {
+	public Object getNMSWatcher() {
 		return watcher;
 	}
 	

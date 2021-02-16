@@ -28,7 +28,7 @@ public class PacketWrapper {
 		return Reflector.getDeclaredFieldsValue(packet, fields);
 	}
 	
-	public Object getPacket() {
+	public Object getNMSPacket() {
 		return packet;
 	}
 	

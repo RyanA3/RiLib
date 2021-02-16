@@ -12,7 +12,7 @@ public enum PacketEntityPose {
 	CROUCHING, 
 	DYING;
 	
-	public Object toNMS() {
+	public Object getNMSPose() {
 		return Reflector.getNMSClass("EntityPose").getEnumConstants()[this.ordinal()];
 	}
 	

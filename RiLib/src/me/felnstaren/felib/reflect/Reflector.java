@@ -45,6 +45,7 @@ public final class Reflector {
 			CLASS_CACHE.put("MinecraftServer",       Class.forName( "net.minecraft.server."    + VERSION +   ".MinecraftServer"                   ));
 			//CLASS_CACHE.put("PacketPlayOutPlayerListHeaderFooter", Class.forName( "net.minecraft.server" + VERSION + "PacketPlayOutPlayerListHeaderFooter" ));
 			CLASS_CACHE.put("CraftPlayer",           Class.forName( "org.bukkit.craftbukkit."  + VERSION +   ".entity.CraftPlayer"                ));
+			CLASS_CACHE.put("CraftEntity",           Class.forName( "org.bukkit.craftbukkit."  + VERSION +   ".entity.CraftEntity"                ));
 			CLASS_CACHE.put("Blocks",                Class.forName( "net.minecraft.server."    + VERSION +   ".Blocks"                            ));
 			CLASS_CACHE.put("Block",                 Class.forName( "net.minecraft.server."    + VERSION +   ".Block"                             ));
 			CLASS_CACHE.put("ItemStack",             Class.forName( "net.minecraft.server."    + VERSION +   ".ItemStack"                         ));
@@ -58,9 +59,11 @@ public final class Reflector {
 		try {
 			METHOD_CACHE.put("b",            getNMSClass("ChatSerializer")    .getDeclaredMethod("b", String.class));
 			METHOD_CACHE.put("sendPacket",   getNMSClass("PlayerConnection")  .getDeclaredMethod("sendPacket", getNMSClass("Packet")));
-			METHOD_CACHE.put("getHandle",    getNMSClass("CraftPlayer")       .getDeclaredMethod("getHandle"));
+			METHOD_CACHE.put("getHandle",    getNMSClass("CraftEntity")       .getDeclaredMethod("getHandle"));
+			METHOD_CACHE.put("getDataWatcher", getNMSClass("Entity")     .getDeclaredMethod("getDataWatcher"));
 			METHOD_CACHE.put("getServer",    getNMSClass("MinecraftServer")   .getDeclaredMethod("getServer"));
 			METHOD_CACHE.put("getById",      getNMSClass("Item")              .getMethod        ("getById", int.class));
+		
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -270,6 +273,10 @@ public final class Reflector {
 		}
 		
 		return constructor;
+	}
+	
+	public static Constructor<?> getConstructor(String from, Class<?>... param_types) {
+		return getConstructor(getNMSClass(from), param_types);
 	}
 	
 	public static Object newInstanceOf(Constructor<?> constructor, Object... params) {

@@ -66,6 +66,13 @@ public class ArrayUtil {
 		return strs;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <T> T[] arrayver(ArrayList<T> from, Class<T> T) {
+		T[] vals = (T[]) Array.newInstance(T, from.size());
+		for(int i = 0; i < vals.length; i++) vals[i] = from.get(i);
+		return vals;
+	}
+	
 	public static int stringind(String[] strs, String check) {
 		for(int i = 0; i < strs.length; i++)
 			if(strs[i].equals(check)) return i;
