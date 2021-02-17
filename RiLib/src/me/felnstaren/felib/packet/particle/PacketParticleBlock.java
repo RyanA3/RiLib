@@ -1,9 +1,10 @@
 package me.felnstaren.felib.packet.particle;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Constructor;
 
 import me.felnstaren.felib.FeLib;
 import me.felnstaren.felib.logger.Level;
+import me.felnstaren.felib.packet.enums.PacketParticleType;
 import me.felnstaren.felib.reflect.Reflector;
 
 public class PacketParticleBlock extends PacketParticle {
@@ -18,25 +19,15 @@ public class PacketParticleBlock extends PacketParticle {
 	
 	@Override
 	protected Object getParticleParam() {
-		Object param = null;
+		Object type = super.getParticleParam();
+		Object block = Reflector.getDeclaredStaticFieldValue("Blocks", blockname);
+		Object blockdata = Reflector.getDeclaredFieldValue(block, "blockData");
 		
-		try {
-			Field particlefield = Reflector.getNMSClass("Particles").getField(type.name());
-			Object particle = particlefield.get(Reflector.getNMSClass("Particles"));
-			
-			Field blockfield = Reflector.getNMSClass("Blocks").getField(blockname);
-			Object block = blockfield.get(Reflector.getNMSClass("Blocks"));
-			
-			Field blockdatafield = Reflector.getNMSClass("Block").getDeclaredField("blockData");
-			blockdatafield.setAccessible(true);
-			Object blockdata = blockdatafield.get(block);
-			param = Reflector.CONSTRUCTOR_CACHE.get("ParticleParamBlock").newInstance(particle, blockdata);
-		} catch(Exception e) {
-			FeLib.LOGGER.log(Level.DEBUG, "Failed to get ParticleParamBlock for " + blockname);
-			param = super.getParticleParam();
-		}
-		
-		return param;
+		return Reflector.newInstanceOf(PARTICLE_PARAM_BLOCK_CONSTRUCTOR, type, blockdata);
 	}
+	
+	
+	
+	private static final Constructor<?> PARTICLE_PARAM_BLOCK_CONSTRUCTOR = Reflector.getConstructor("ParticleParamBlock", Reflector.getNMSClass("ParticleType"), Reflector.getNMSClass("IBlockData"));
 
 }

@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.felnstaren.felib.chat.Messenger;
+import me.felnstaren.felib.packet.enums.PacketParticleType;
 import me.felnstaren.felib.packet.particle.PacketParticle;
 import me.felnstaren.felib.packet.particle.PacketParticleBlock;
 import me.felnstaren.felib.packet.particle.PacketParticleDust;
 import me.felnstaren.felib.packet.particle.PacketParticleItem;
-import me.felnstaren.felib.packet.particle.PacketParticleType;
 
 public class ParticleCommand implements CommandExecutor {
 
@@ -63,7 +63,8 @@ public class ParticleCommand implements CommandExecutor {
 			Messenger.send(player, "#F55Spawning particle#999 " + type.name());
 		}
 		
-		particle.send(player, location.getBlockX() + 0.5, location.getBlockY() + 1.5, location.getBlockZ() + 0.5);
+		particle.build(location.getBlockX() + 0.5, location.getBlockY() + 1.5, location.getBlockZ() + 0.5);
+		particle.send(player);
 		return true;
 	}
 	

@@ -1,7 +1,8 @@
 package me.felnstaren.felib.packet.particle;
 
-import me.felnstaren.felib.FeLib;
-import me.felnstaren.felib.logger.Level;
+import java.lang.reflect.Constructor;
+
+import me.felnstaren.felib.packet.enums.PacketParticleType;
 import me.felnstaren.felib.reflect.Reflector;
 
 public class PacketParticleDust extends PacketParticle {
@@ -18,16 +19,11 @@ public class PacketParticleDust extends PacketParticle {
 	
 	@Override
 	protected Object getParticleParam() {
-		Object param;
-		
-		try {
-			param = Reflector.CONSTRUCTOR_CACHE.get("ParticleParamRedstone").newInstance(red, green, blue, size);
-		} catch (Exception e) {
-			FeLib.LOGGER.log(Level.DEBUG, "Failed to get ParticleParamRedstone for " + red + "," + green + "," + blue + "," + size);
-			param = super.getParticleParam();
-		}
-		
-		return param;
+		return Reflector.newInstanceOf(PARTICLE_PARAM_REDSTONE_CONSTRUCTOR, red, green, blue, size);
 	}
-
+	
+	
+	
+	private static final Constructor<?> PARTICLE_PARAM_REDSTONE_CONSTRUCTOR = Reflector.getConstructor("ParticleParamRedstone", float.class, float.class, float.class, float.class);
+	
 }

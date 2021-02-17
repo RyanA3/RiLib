@@ -1,9 +1,9 @@
 package me.felnstaren.felib.packet.particle;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
-import me.felnstaren.felib.FeLib;
-import me.felnstaren.felib.logger.Level;
+import me.felnstaren.felib.packet.enums.PacketParticleType;
 import me.felnstaren.felib.reflect.Reflector;
 
 public class PacketParticleItem extends PacketParticle {
@@ -17,21 +17,16 @@ public class PacketParticleItem extends PacketParticle {
 
 	@Override
 	protected Object getParticleParam() {
-		Object param = null;
-		
-		try {
-			Field particlefield = Reflector.getNMSClass("Particles").getField(type.name());
-			Object particle = particlefield.get(Reflector.getNMSClass("Particles"));
-			
-			Object imat = Reflector.METHOD_CACHE.get("getById").invoke(null, item);
-			Object itemstack = Reflector.CONSTRUCTOR_CACHE.get("ItemStack").newInstance(imat);
-			param = Reflector.CONSTRUCTOR_CACHE.get("ParticleParamItem").newInstance(particle, itemstack);
-		} catch(Exception e) {
-			FeLib.LOGGER.log(Level.DEBUG, "Failed to get ParticleParamItem for " + item);
-			param = super.getParticleParam();
-		}
-		
-		return param;
+		Object type = super.getParticleParam();
+		Object imat = Reflector.invokeMethod(GET_ITEM_BY_ID_METHOD, Reflector.getNMSClass("Item"), item);
+		Object itemstack = Reflector.newInstanceOf(ITEM_STACK_CONSTRUCTOR, imat);
+		return Reflector.newInstanceOf(PARTICLE_PARAM_ITEM_CONSTRUCTOR, type, itemstack);
 	}
+	
+	
+	
+	private static final Method GET_ITEM_BY_ID_METHOD = Reflector.getDeclaredMethod(Reflector.getNMSClass("Item"), "getById", int.class);
+	private static final Constructor<?> ITEM_STACK_CONSTRUCTOR = Reflector.getConstructor("ItemStack", Reflector.getNMSClass("Item"));
+	private static final Constructor<?> PARTICLE_PARAM_ITEM_CONSTRUCTOR = Reflector.getConstructor("ParticleParamItem", Reflector.getNMSClass("ParticleType"), Reflector.getNMSClass("ItemStack"));
 	
 }
