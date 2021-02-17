@@ -2,53 +2,25 @@ package me.felnstaren.felib.config;
 
 import java.util.UUID;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-public abstract class DataPlayer {
+public class DataPlayer extends ConfigObject {
 	
-	protected YamlConfiguration data;
-	protected String path;
 	protected UUID uuid;
 	
-	public DataPlayer(UUID uuid) {
+	public DataPlayer(UUID uuid, String template) {
+		super("playerdata/" + uuid + ".yml", template, uuid.clockSequence()); //Using UUID's clock sequence time as unique identifier
 		this.uuid = uuid;
-		this.path = "playerdata/" + uuid + ".yml";
-		load();
 	}
 	
-	public DataPlayer(Player player) {
-		this.uuid = player.getUniqueId();
-		this.path = "playerdata/" + uuid + ".yml";
-		load();
+	public DataPlayer(Player player, String template) {
+		this(player.getUniqueId(), template);
 	}
+
 	
-	/*protected void finalize() throws Throwable {
-		save();
-	}*/
-	
-	
-	protected abstract void load();
-	public abstract void save();
-	
-	
-	
-	public void set(String key, Object value) {
-		data.set(key, value);
-	}
-	
-	
-	
-	public String getPath() {
-		return path;
-	}
 	
 	public UUID getUniqueId() {
 		return uuid;
-	}
-	
-	public YamlConfiguration getData() {
-		return data;
 	}
 	
 }
