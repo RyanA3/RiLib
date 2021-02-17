@@ -1,4 +1,4 @@
-package me.felnstaren.felib.time;
+package me.felnstaren.felib.util.time;
 
 import java.util.Calendar;
 

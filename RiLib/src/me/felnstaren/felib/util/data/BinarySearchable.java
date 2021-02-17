@@ -1,4 +1,4 @@
-package me.felnstaren.felib.data;
+package me.felnstaren.felib.util.data;
 
 import java.util.ArrayList;
 

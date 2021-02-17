@@ -1,4 +1,4 @@
-package me.felnstaren.felib.particle;
+package me.felnstaren.felib.packet.particle;
 
 import me.felnstaren.felib.FeLib;
 import me.felnstaren.felib.logger.Level;

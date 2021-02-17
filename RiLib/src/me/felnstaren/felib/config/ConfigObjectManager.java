@@ -3,7 +3,7 @@ package me.felnstaren.felib.config;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.felnstaren.felib.data.BinarySearchable;
+import me.felnstaren.felib.util.data.BinarySearchable;
 
 public class ConfigObjectManager<T extends ConfigObject> extends BinarySearchable<T> {
 

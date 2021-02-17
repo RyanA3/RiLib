@@ -1,4 +1,4 @@
-package me.felnstaren.felib.util;
+package me.felnstaren.felib.util.math;
 
 /**
  * OI NOW YEU JUST GON ALL BLO'Y BRI'ISH NOW AI'N YA'

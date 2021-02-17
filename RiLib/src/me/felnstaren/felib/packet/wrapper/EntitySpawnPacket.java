@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 
 import me.felnstaren.felib.packet.enums.PacketEntityType;
 import me.felnstaren.felib.reflect.Reflector;
-import me.felnstaren.felib.util.Maths;
+import me.felnstaren.felib.util.math.Maths;
 
 public class EntitySpawnPacket extends PacketWrapper {
 

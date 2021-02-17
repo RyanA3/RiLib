@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.felnstaren.felib.chat.Messenger;
-import me.felnstaren.felib.particle.PacketParticle;
-import me.felnstaren.felib.particle.PacketParticleBlock;
-import me.felnstaren.felib.particle.PacketParticleDust;
-import me.felnstaren.felib.particle.PacketParticleItem;
-import me.felnstaren.felib.particle.PacketParticleType;
+import me.felnstaren.felib.packet.particle.PacketParticle;
+import me.felnstaren.felib.packet.particle.PacketParticleBlock;
+import me.felnstaren.felib.packet.particle.PacketParticleDust;
+import me.felnstaren.felib.packet.particle.PacketParticleItem;
+import me.felnstaren.felib.packet.particle.PacketParticleType;
 
 public class ParticleCommand implements CommandExecutor {
 

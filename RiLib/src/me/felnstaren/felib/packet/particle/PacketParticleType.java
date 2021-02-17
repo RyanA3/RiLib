@@ -1,4 +1,4 @@
-package me.felnstaren.felib.particle;
+package me.felnstaren.felib.packet.particle;
 
 public enum PacketParticleType {
 

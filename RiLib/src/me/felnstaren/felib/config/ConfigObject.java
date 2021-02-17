@@ -2,7 +2,7 @@ package me.felnstaren.felib.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.felnstaren.felib.data.SearchObject;
+import me.felnstaren.felib.util.data.SearchObject;
 
 public class ConfigObject implements SearchObject {
 
