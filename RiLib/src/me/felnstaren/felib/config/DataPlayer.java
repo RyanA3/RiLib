@@ -9,7 +9,7 @@ public class DataPlayer extends ConfigObject {
 	protected UUID uuid;
 	
 	public DataPlayer(UUID uuid, String template) {
-		super("playerdata/" + uuid + ".yml", template, uuid.clockSequence()); //Using UUID's clock sequence time as unique identifier
+		super("playerdata/" + uuid + ".yml", template, (int) uuid.getMostSignificantBits()); //Using UUID's clock sequence time as unique identifier
 		this.uuid = uuid;
 	}
 	

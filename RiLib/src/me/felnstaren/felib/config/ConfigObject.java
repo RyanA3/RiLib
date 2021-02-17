@@ -15,6 +15,7 @@ public class ConfigObject implements SearchObject {
 	public ConfigObject(String path, String template, int access_key) {
 		this.path = path;
 		this.template = template;
+		this.access_key = access_key;
 	}
 	
 	public ConfigObject(String path, int access_key) {
