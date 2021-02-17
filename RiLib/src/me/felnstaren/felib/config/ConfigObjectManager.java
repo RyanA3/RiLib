@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.felnstaren.felib.data.BinarySearchable;
 
-public class ConfigObjectManager extends BinarySearchable<ConfigObject> {
+public class ConfigObjectManager<T extends ConfigObject> extends BinarySearchable<T> {
 
 	protected Loader loader;
 	
@@ -17,7 +17,7 @@ public class ConfigObjectManager extends BinarySearchable<ConfigObject> {
 	
 	
 	@Override
-	public void add(ConfigObject o) {
+	public void add(T o) {
 		o.load(loader);
 		super.add(o);
 	}
