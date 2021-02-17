@@ -152,6 +152,18 @@ public final class Reflector {
 	
 	
 	
+	public static Object cast(Object what, Class<?> to) {
+		try {
+			return to.cast(what);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FeLib.LOGGER.log(Level.WARNING, "Failed casting object");
+			return null;
+		}
+	}
+	
+	
+	
 	
 	
 	/*

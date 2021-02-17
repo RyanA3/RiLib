@@ -3,14 +3,11 @@ package me.felnstaren.felib.command.impl;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import me.felnstaren.felib.packet.PacketPlayer;
 
 public class TestCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		Player player = (Player) sender;
+		//Player player = (Player) sender;
 		
 		/*ChatPrompt prompt = new ChatPrompt(player, 20, "#FD0What's your favorite game to game upon?") {
 			public void callback(String response) {
@@ -23,8 +20,8 @@ public class TestCommand implements CommandExecutor {
 		};
 		
 		PromptHandler.inst().register(prompt);*/
-		PacketPlayer pp = new PacketPlayer(player);
-		pp.sendEffect(player.getEntityId(), "BLINDNESS", -1, 32740, false);
+		//PacketPlayer pp = new PacketPlayer(player);
+		//pp.sendEffect(player.getEntityId(), "BLINDNESS", -1, 32740, false);
 		
 		return true;
 	}
