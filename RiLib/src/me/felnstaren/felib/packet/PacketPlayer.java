@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import me.felnstaren.felib.reflect.Reflector;
 
+@Deprecated
 public class PacketPlayer {
 	
 	Object player_connection;

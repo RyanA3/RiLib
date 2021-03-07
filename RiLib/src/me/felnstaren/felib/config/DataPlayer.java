@@ -11,7 +11,7 @@ public class DataPlayer extends ConfigObject {
 	protected UUID uuid;
 	
 	public DataPlayer(UUID uuid, String template) {
-		super("playerdata/" + uuid + ".yml", template, SearchObject.getIndexValue(uuid)); //Using UUID's clock sequence time as unique identifier
+		super("playerdata/" + uuid + ".yml", template, SearchObject.getIndexValue(uuid));
 		this.uuid = uuid;
 	}
 	

@@ -2,9 +2,6 @@ package me.felnstaren.felib.util.data;
 
 import java.util.ArrayList;
 
-import me.felnstaren.felib.FeLib;
-import me.felnstaren.felib.logger.Level;
-
 public class BinarySearchable<T extends SearchObject> {
 
 	protected ArrayList<T> values;
