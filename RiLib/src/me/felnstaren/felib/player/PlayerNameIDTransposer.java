@@ -20,10 +20,11 @@ public class PlayerNameIDTransposer extends BinarySearchable<PlayerNameID> imple
 	private String path;
 	//private String template;
 	
-	public PlayerNameIDTransposer(Loader loader, String path, String template) {
+	public PlayerNameIDTransposer(JavaPlugin plugin, Loader loader, String path, String template) {
 		this.loader = loader;
 		this.path = path;
 		//this.template = template;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		
 		//Load name ids from file on construction
 		String data = loader.readString(path, template);
@@ -32,8 +33,8 @@ public class PlayerNameIDTransposer extends BinarySearchable<PlayerNameID> imple
 			super.add(new PlayerNameID(nameid));
 	}
 	
-	public PlayerNameIDTransposer(Loader loader, String path) {
-		this(loader, path, null);
+	public PlayerNameIDTransposer(JavaPlugin plugin, Loader loader, String path) {
+		this(plugin, loader, path, null);
 	}
 	
 	
