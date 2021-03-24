@@ -77,4 +77,13 @@ public class ItemEditor {
 		return item;
 	}
 	
+	public static ItemStack setLore(ItemStack item, String... values) {
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		for(int i = 0; i < values.length; i++) lore.add(Messenger.color(values[i]));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 }
