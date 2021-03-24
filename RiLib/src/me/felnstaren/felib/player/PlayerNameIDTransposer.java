@@ -29,6 +29,7 @@ public class PlayerNameIDTransposer extends BinarySearchable<PlayerNameID> imple
 		//Load name ids from file on construction
 		String data = loader.readString(path, template);
 		String[] nameids = data.split(",");
+		if(nameids.length == 1 && nameids[0].length() == 0) return;
 		for(String nameid : nameids)
 			super.add(new PlayerNameID(nameid));
 	}

@@ -1,7 +1,6 @@
 package me.felnstaren.felib.ui.menu;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -22,6 +21,7 @@ public class Menu {
 	
 	public void click(int slot, MenuSession session) {
 		ItemStack clicked = inventory.getItem(slot);
+		if(clicked == null) return;
 		
 		if(!NBTEditor.contains(clicked, "button")) return;
 		String label = NBTEditor.getString(clicked, "button");
