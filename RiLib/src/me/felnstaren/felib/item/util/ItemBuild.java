@@ -34,6 +34,11 @@ public class ItemBuild {
 		return this;
 	}
 	
+	public ItemBuild setLore(String value, int line) {
+		item = ItemEditor.setLore(item, value, line);
+		return this;
+	}
+	
 	public ItemBuild setFlag(String key, Object value) {
 		item = NBTEditor.set(item, value, key);
 		return this;

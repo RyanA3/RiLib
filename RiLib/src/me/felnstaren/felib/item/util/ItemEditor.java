@@ -1,5 +1,7 @@
 package me.felnstaren.felib.item.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -7,6 +9,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Damageable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import me.felnstaren.felib.chat.Messenger;
 
 public class ItemEditor {
 	
@@ -58,6 +62,18 @@ public class ItemEditor {
 		meta.setCustomModelData(data);
 		item.setItemMeta(meta);
 		
+		return item;
+	}
+	
+	public static ItemStack setLore(ItemStack item, String value, int line) {
+		value = Messenger.color(value);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = meta.getLore();
+		if(lore == null) lore = new ArrayList<String>();
+		if(lore.size() >= line) lore.add(line, value);
+		else lore.set(line, value);
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 		return item;
 	}
 	

@@ -7,30 +7,33 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.felnstaren.felib.FeLib;
-import me.felnstaren.felib.logger.Level;
-
 public class InventoryEditor {
+	
+	public static int countItems(Inventory inventory, ItemStack item) {
+		ItemStack[] contents = inventory.getContents();
+		
+		int count = 0;
+		for(int i = 0; i < contents.length; i++) {
+			if(contents[i] == null) continue;
+			if(isSimilar(contents[i], item)) count += contents[i].getAmount();
+		}
+		
+		return count;
+	}
 	
 	public static void remove(Inventory inventory, ItemStack remove, int count) {
 		ItemStack[] contents = inventory.getContents();
 		
-		FeLib.LOGGER.log(Level.DEBUG, "IN FUNCTION REMOVE A1 - " + remove.getType().name() + " : " + count);
 		for(int i = 0; i < contents.length; i++) {
-			FeLib.LOGGER.log(Level.DEBUG, "Al1");
 			if(count <= 0) break;
-			FeLib.LOGGER.log(Level.DEBUG, "Al2");
 			if(contents[i] == null || !isSimilar(contents[i], remove)) continue;
-			FeLib.LOGGER.log(Level.DEBUG, "Al3");
 			
 			int stack_size = contents[i].getAmount();
 			
 			if(stack_size > count) {
-				FeLib.LOGGER.log(Level.DEBUG, "Al4");
 				contents[i].setAmount(stack_size - count);
 				count = 0;
 			} else {
-				FeLib.LOGGER.log(Level.DEBUG, "Al5");
 				contents[i].setAmount(0);
 				count -= stack_size;
 			}

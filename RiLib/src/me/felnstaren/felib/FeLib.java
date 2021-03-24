@@ -35,6 +35,7 @@ public class FeLib extends JavaPlugin {
 	public void onDisable() {
 		INJECTOR.getManager().clear();
 		INJECTOR.shutdown();
+		MenuSessionHandler.inst().closeAllSessions();
 	}
 	
 }
