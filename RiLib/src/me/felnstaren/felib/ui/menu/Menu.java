@@ -1,15 +1,19 @@
 package me.felnstaren.felib.ui.menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.felnstaren.felib.util.ArrayUtil;
 import other.bananapuncher714.nbt.NBTEditor;
 
 public class Menu {
 
-	private Inventory inventory;
+	protected Inventory inventory;
 
 	public Menu(MenuSchematic schematic) {
 		this.inventory = schematic.construct();
@@ -22,12 +26,14 @@ public class Menu {
 		if(!NBTEditor.contains(clicked, "button")) return;
 		String label = NBTEditor.getString(clicked, "button");
 		
-		ButtonHandler.inst().getButton(label).execute(session, clicked);
+		MenuButton button = ButtonHandler.inst().getButton(label);
+		if(button != null) button.execute(session, clicked);
 	}
 	
 	public void close() {
 		inventory.clear();
-		for(HumanEntity viewer : inventory.getViewers())
+		HumanEntity[] viewers = ArrayUtil.arrayver(new ArrayList<HumanEntity>(inventory.getViewers()), HumanEntity.class);
+		for(HumanEntity viewer : viewers)
 			viewer.closeInventory();
 	}
 	

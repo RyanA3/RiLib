@@ -21,17 +21,36 @@ public class ArrayUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T[] removeNulls(T[] arr) {
+	public static <T> T[] removeNulls(T[] arr, Class<T> type) {
 		int arr_length = 0;
 		for(int i = 0; i < arr.length; i++) if(arr[i] != null) arr_length++;
-		
-		T[] new_arr = (T[]) Array.newInstance(arr.getClass(), arr_length);
+	
+		T[] new_arr = (T[]) Array.newInstance(type, arr_length);
 		for(int i = 0, j = 0; i < arr.length; i++) {
 			if(arr[i] == null) continue;
-			new_arr[++j] = arr[i];
+			new_arr[j++] = arr[i];
 		}
 		
 		return new_arr;
+	}
+	
+	public static int[] removeValues(int[] arr, int value) {
+		int hits = 0;
+		for(int i = 0; i < arr.length; i++)
+			if(arr[i] == value) hits++;
+		
+		int[] cleared = new int[arr.length - hits];
+		int shift = 0;
+		for(int i = 0; i < arr.length; i++) {
+			if(arr[i] == value) {
+				shift++;
+				continue;
+			}
+			
+			cleared[i - shift] = arr[i];
+		}
+		
+		return cleared;
 	}
 	
 	

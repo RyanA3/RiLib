@@ -3,6 +3,7 @@ package me.felnstaren.felib.ui.menu;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,6 +52,7 @@ public class MenuSessionHandler implements Listener {
 		if(!isSession(player)) return;
 		event.setCancelled(true);
 		
+		Bukkit.broadcastMessage("Session action: " + event.getAction().name());
 		if(event.getAction() == InventoryAction.PICKUP_ALL)
 			getSession(player).click(event.getSlot());
 	}
@@ -74,6 +76,7 @@ public class MenuSessionHandler implements Listener {
 	
 	public void closeSession(Player player) {
 		int index = index_players.indexOf(player.getUniqueId());
+		if(index == -1) return;
 		index_players.remove(index);
 		sessions.get(index).close();
 		sessions.remove(index);
