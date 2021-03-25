@@ -73,10 +73,18 @@ public class BinarySearchable<T extends SearchObject> {
 		return index;
 	}
 	
+	public T get(T value) {
+		return get(value.searchValue());
+	}
+	
 	public T get(int search_value) {
 		int index = indexOf(search_value);
 		if(index < 0) return null;
 		return values.get(index);
+	}
+	
+	public void remove(T value) {
+		remove(value.searchValue());
 	}
 	
 	public void remove(int search_value) {
