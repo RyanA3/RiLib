@@ -11,14 +11,14 @@ public abstract class CommandContinuator implements CommandElement, Tabbable {
 	
 	protected ArrayList<SubCommand> commands;
 	protected ArrayList<SubArgument> arguments;
-	protected CommandStub stub;
+	//protected CommandStub stub;
 	protected String permission;
 	protected String label;
 	
-	protected CommandContinuator(CommandStub stub, String label, String permission) {
+	protected CommandContinuator(/*CommandStub stub,*/ String label, String permission) {
 		this.commands = new ArrayList<SubCommand>();
 		this.arguments = new ArrayList<SubArgument>();
-		this.stub = stub;
+		///this.stub = stub;
 		this.label = label;
 		this.permission = permission;
 	}
@@ -57,7 +57,7 @@ public abstract class CommandContinuator implements CommandElement, Tabbable {
 			return true;
 		}
 		
-		return stub.handle(sender, args, args.length - 1);
+		return stub(sender, args, args.length - 1);
 	}
 	
 	

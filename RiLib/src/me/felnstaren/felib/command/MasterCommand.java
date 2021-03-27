@@ -15,8 +15,8 @@ public abstract class MasterCommand extends CommandContinuator implements Comman
 	
 	protected ArrayList<TabSuggestor> tab_suggestors;
 	
-	protected MasterCommand(CommandStub stub, String label, String permission, TabSuggestor... tab_suggestors) {
-		super(stub, label, permission);
+	protected MasterCommand(/*CommandStub stub,*/ String label, String permission, TabSuggestor... tab_suggestors) {
+		super(/*stub,*/ label, permission);
 		this.tab_suggestors = new ArrayList<TabSuggestor>();
 		for(TabSuggestor suggestor : tab_suggestors) this.tab_suggestors.add(suggestor);
 	}

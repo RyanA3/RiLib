@@ -12,7 +12,13 @@ public enum Color {
 	LIGHT_BLUE("#8888FF"),
 	DARK_GRAY("#444444"),
 	GRAY("#777777"),
-	LIGHT_GRAY("#AAAAAA");
+	LIGHT_GRAY("#AAAAAA"),
+	WHEAT("#D6D6D6"),
+	WHITE("#FFFFFF"),
+	ARROW_LEFT("\u2190"),
+	ARROW_UP("\u2191"),
+	ARROW_RIGHT("\u2192"),
+	ARROW_DOWN("\u2193");
 	
 	private String value;
 	
