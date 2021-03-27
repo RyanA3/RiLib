@@ -18,7 +18,11 @@ public enum Color {
 	ARROW_LEFT("\u2190"),
 	ARROW_UP("\u2191"),
 	ARROW_RIGHT("\u2192"),
-	ARROW_DOWN("\u2193");
+	ARROW_DOWN("\u2193"),
+	DOUBLE_ARROW_LEFT("\u21D0"),
+	DOUBLE_ARROW_UP("\u21D1"),
+	DOUBLE_ARROW_RIGHT("\u21D2"),
+	DOUBLE_ARROW_DOWN("\u21D3");
 	
 	private String value;
 	
