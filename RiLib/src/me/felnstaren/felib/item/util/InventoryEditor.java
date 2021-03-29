@@ -1,13 +1,38 @@
 package me.felnstaren.felib.item.util;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class InventoryEditor {
+	
+	public static int getLast(Inventory inventory, ItemStack search) {
+		ItemStack[] contents = inventory.getContents();
+		
+		for(int i = contents.length - 1; i > 0; i++) {
+			if(contents[i] == null) continue;
+			if(isSimilar(contents[i], search)) return i;
+		}
+		
+		return -1;
+	}
+	
+	public static int getFirst(Inventory inventory, ItemStack search) {
+		ItemStack[] contents = inventory.getContents();
+		
+		for(int i = 0; i < contents.length; i++) {
+			if(contents[i] == null) continue;
+			if(isSimilar(contents[i], search)) return i;
+		}
+		
+		return -1;
+	}
 	
 	public static int countItems(Inventory inventory, ItemStack item) {
 		ItemStack[] contents = inventory.getContents();
@@ -21,7 +46,7 @@ public class InventoryEditor {
 		return count;
 	}
 	
-	public static void remove(Inventory inventory, ItemStack remove, int count) {
+	public static int remove(Inventory inventory, ItemStack remove, int count) {
 		ItemStack[] contents = inventory.getContents();
 		
 		for(int i = 0; i < contents.length; i++) {
@@ -40,16 +65,22 @@ public class InventoryEditor {
 		}
 		
 		inventory.setContents(contents);
+		return count;
+	}
+	
+	public static void add(Inventory inventory, ArrayList<ItemStack> add, boolean drop_if_full) {
+		for(ItemStack item : add) add(inventory, item, item.getAmount(), drop_if_full);
 	}
 
 	public static void add(Inventory inventory, ItemStack add, int count, boolean drop_if_full) {
 		ItemStack[] contents = inventory.getContents();
+		int max_stack_size = add.getMaxStackSize();
 		
 		for(int i = 0; i < contents.length; i++) {
 			if(count <= 0) break; 
+			if(inventory.getType() == InventoryType.PLAYER && i > 35) break;
 			if(contents[i] != null && !isSimilar(contents[i], add)) continue;
 			
-			int max_stack_size = add.getMaxStackSize();
 			int stack_size = contents[i] == null ? 0 : contents[i].getAmount();
 			int open = contents[i] == null ? max_stack_size : max_stack_size - contents[i].getAmount();
 			if(contents[i] == null) contents[i] = add.clone();
