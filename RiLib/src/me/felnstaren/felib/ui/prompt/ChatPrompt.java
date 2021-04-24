@@ -1,6 +1,5 @@
 package me.felnstaren.felib.ui.prompt;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.felnstaren.felib.chat.Message;
@@ -22,9 +21,7 @@ public abstract class ChatPrompt extends Prompt<String> {
 
 
 	public void send() {
-		Bukkit.broadcastMessage("Send:\n" + message.build());
 		Messenger.sendChatPacket(player, message.build());
-		
 	}
 
 	public void timeout() {

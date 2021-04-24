@@ -27,8 +27,9 @@ public class PacketParticle {
 		this.vz = vz;
 	}
 	
-	public void build(double offx, double offy, double offz) {
+	public PacketParticle build(double offx, double offy, double offz) {
 		this.packet = Reflector.newInstanceOf(PACKET_PARTICLE_CONSTRUCTOR, getParticleParam(), false, offx, offy, offz, vx, vy, vz, speed, count);
+		return this;
 	}
 	
 	public void send(Player player) {
@@ -37,7 +38,7 @@ public class PacketParticle {
 			return;
 		}
 		
-		Packeteer.sendClientPacket(player, Reflector.newInstanceOf(PACKET_PARTICLE_CONSTRUCTOR, packet));
+		Packeteer.sendClientPacket(player, packet);
 	}
 	
 	protected Object getParticleParam() {
@@ -46,6 +47,6 @@ public class PacketParticle {
 	
 	
 	
-	private static final Constructor<?> PACKET_PARTICLE_CONSTRUCTOR = Reflector.getConstructor("PacketPlayOutWorldParticles", Reflector.getNMSClass("ParticleType"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class);
+	private static final Constructor<?> PACKET_PARTICLE_CONSTRUCTOR = Reflector.getConstructor("PacketPlayOutWorldParticles", Reflector.getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class);
 	
 }

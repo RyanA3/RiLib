@@ -3,6 +3,7 @@ package me.felnstaren.felib.item.util;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import me.felnstaren.felib.reflect.Reflector;
 import other.bananapuncher714.nbt.NBTEditor;
 
 public class ItemBuild {
@@ -46,6 +47,11 @@ public class ItemBuild {
 	
 	public ItemBuild setFlag(String key, Object value) {
 		item = NBTEditor.set(item, value, key);
+		return this;
+	}
+	
+	public ItemBuild setGlowing() {
+		//item = NBTEditor.set(item, Reflector.newInstanceOf("NBTTagList"), "ench");
 		return this;
 	}
 	
