@@ -25,6 +25,15 @@ public class Logger {
 		console.sendMessage(prefix + divider + Messenger.color(message));
 	}
 	
+	
+	public void stream(String message) { this.log(Level.STREAM,  message); }
+	public void debug(String message)  { this.log(Level.DEBUG,   message); }
+	public void info(String message)   { this.log(Level.INFO,    message); }
+	public void warn(String message)   { this.log(Level.WARNING, message); }
+	public void severe(String message) { this.log(Level.SEVERE,  message); }
+	public void fatal(String message)  { this.log(Level.FATAL,   message); }
+	
+	
 	public void setPriority(Level priority) {
 		this.priority = priority;
 	}

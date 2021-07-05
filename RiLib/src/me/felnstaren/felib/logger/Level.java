@@ -8,7 +8,8 @@ public enum Level {
 	SEVERE(ChatColor.DARK_RED, 3),
 	WARNING(ChatColor.YELLOW, 2),
 	INFO(ChatColor.WHITE, 1),
-	DEBUG(ChatColor.GRAY, 0);
+	DEBUG(ChatColor.GRAY, 0),
+	STREAM(ChatColor.GRAY, -1);
 	
 	public final ChatColor color;
 	public final int weight;

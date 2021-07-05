@@ -20,6 +20,47 @@ public class ArrayUtil {
 		return insert(obj, arr.length, arr);
 	}
 	
+	public static <T> boolean contains(T[] array, T value) {
+		for(T val : array)
+			if(val == value) return true;
+		return false;
+	}
+	
+	public static <T> boolean contains(T[] array, T[] values) {
+		for(T val : array)
+			for(T check : values)
+				if(val == check) return true;
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T[] combine(T[] arr1, T[] arr2) {
+		T[] new_arr = (T[]) Array.newInstance(arr1[0].getClass(), arr1.length + arr2.length);
+		
+		int i, j;
+		for(i = 0; i < arr1.length; i++) new_arr[i] = arr1[i];
+		for(j = 0; j < arr2.length; j++) new_arr[i+j] = arr2[j];
+		
+		return new_arr;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T[] remove(T[] array, T... remove) {
+		int count = 0;
+		for(T val : array) {
+			for(T check : remove) {
+				if(val == check) { count++; break; } } }
+		
+		T[] new_arr = (T[]) Array.newInstance(array[0].getClass(), array.length - count);
+		int i = 0, j = 0;
+		for(; i < array.length; i++) {
+			if(contains(remove, array[i])) continue;
+			new_arr[j] = array[i]; j++;
+		}
+		
+		return new_arr;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T[] removeNulls(T[] arr, Class<T> type) {
 		int arr_length = 0;
@@ -52,6 +93,8 @@ public class ArrayUtil {
 		
 		return cleared;
 	}
+	
+	
 	
 	
 	/**

@@ -17,9 +17,9 @@ public class ConfigObjectManager<T extends ConfigObject> extends BinarySearchabl
 	
 	
 	@Override
-	public void add(T o) {
+	public int add(T o) {
 		o.load(loader);
-		super.add(o);
+		return super.add(o);
 	}
 	
 	@Override

@@ -12,7 +12,7 @@ public class BinarySearchable<T extends SearchObject> {
 	
 	
 	
-	public void add(T value) { //https://www.geeksforgeeks.org/binary-insertion-sort/
+	public int add(T value) { //https://www.geeksforgeeks.org/binary-insertion-sort/
 		int low = 0;
 		int high = values.size() - 1;
 		int index = -1;
@@ -21,7 +21,7 @@ public class BinarySearchable<T extends SearchObject> {
 		
 		if(values.size() == 0) {
 			values.add(value);
-			return;
+			return 0;
 		}
 		
 		while(true) {
@@ -45,8 +45,12 @@ public class BinarySearchable<T extends SearchObject> {
 		}
 		
 		//FeLib.LOGGER.log(Level.DEBUG, "Add " + key + " at " + index);
-		if(index == -1) values.add(value);
-		else values.add(index, value);
+		if(index == -1) { values.add(value); return values.size()-1; }
+		else { values.add(index, value); return index; }
+	}
+	
+	public int indexOf(T value) {
+		return indexOf(value.searchValue());
 	}
 	
 	public int indexOf(int search_value) { //https://www.baeldung.com/java-binary-search
