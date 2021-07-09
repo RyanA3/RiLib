@@ -71,6 +71,10 @@ public class MenuSchematic {
 		return name;
 	}
 	
+	public int getRows() {
+		return rows;
+	}
+	
 	public InventoryType getType() {
 		return type;
 	}
