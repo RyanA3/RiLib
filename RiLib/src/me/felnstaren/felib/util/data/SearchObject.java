@@ -10,6 +10,7 @@ public interface SearchObject {
 	 * Converts a uuid to an int that can be searched by BinarySearchable
 	 */
 	public static int getIndexValue(UUID uuid) {
+		//if(uuid == null) return -1;
 		return (int) uuid.getMostSignificantBits();
 	}
 	

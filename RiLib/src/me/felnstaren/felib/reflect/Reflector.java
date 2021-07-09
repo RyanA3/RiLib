@@ -34,6 +34,8 @@ public final class Reflector {
 		
 		CLASS_CACHE = new HashMap<String, Class<?>>();
 		try {
+			CLASS_CACHE.put("PacketPlayOutTitle", 	 Class.forName( "net.minecraft.server."    + VERSION +   ".PacketPlayOutTitle"				  ));
+			CLASS_CACHE.put("EnumTitleAction",       Class.forName( "net.minecraft.server."    + VERSION +   ".PacketPlayOutTitle$EnumTitleAction"));
 			CLASS_CACHE.put("ChatMessageType",       Class.forName( "net.minecraft.server."    + VERSION +   ".ChatMessageType"                   ));
 			CLASS_CACHE.put("IChatBaseComponent",    Class.forName( "net.minecraft.server."    + VERSION +   ".IChatBaseComponent"                ));
 			CLASS_CACHE.put("ChatSerializer",        Class.forName( "net.minecraft.server."    + VERSION +   ".IChatBaseComponent$ChatSerializer" ));
@@ -58,6 +60,7 @@ public final class Reflector {
 		METHOD_CACHE = new HashMap<String, Method>();
 		try {
 			METHOD_CACHE.put("b",            getNMSClass("ChatSerializer")    .getDeclaredMethod("b", String.class));
+			METHOD_CACHE.put("a", 			 getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class));
 			METHOD_CACHE.put("sendPacket",   getNMSClass("PlayerConnection")  .getDeclaredMethod("sendPacket", getNMSClass("Packet")));
 			METHOD_CACHE.put("getHandle",    getNMSClass("CraftEntity")       .getDeclaredMethod("getHandle"));
 			METHOD_CACHE.put("getDataWatcher", getNMSClass("Entity")     .getDeclaredMethod("getDataWatcher"));
@@ -71,6 +74,7 @@ public final class Reflector {
 		
 		CONSTRUCTOR_CACHE = new HashMap<String, Constructor<?>>();
 		try {
+			CONSTRUCTOR_CACHE.put("PacketPlayOutTitle", getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle$EnumTitleAction"), getNMSClass("IChatBaseComponent"), int.class, int.class, int.class));
 			CONSTRUCTOR_CACHE.put("PacketPlayOutChat", getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), getNMSClass("ChatMessageType"), UUID.class));
 			CONSTRUCTOR_CACHE.put("PacketPlayOutPlayerListHeaderFooter", getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor());
 			CONSTRUCTOR_CACHE.put("PacketPlayOutWorldParticles", getNMSClass("PacketPlayOutWorldParticles").getConstructor(getNMSClass("ParticleParam"), boolean.class, double.class, double.class, double.class, float.class, float.class, float.class, float.class, int.class));

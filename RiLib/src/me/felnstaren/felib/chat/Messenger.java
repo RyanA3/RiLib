@@ -3,8 +3,10 @@ package me.felnstaren.felib.chat;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.felnstaren.felib.packet.enums.PacketTitleAction;
 import me.felnstaren.felib.reflect.Packeteer;
 import me.felnstaren.felib.reflect.Reflector;
 import me.felnstaren.felib.util.ArrayUtil;
@@ -140,7 +142,7 @@ public class Messenger {
 	public static int sendChatPacket(Player player, String message) {
 		try {
 			//Create the packet
-			Object component = Reflector.METHOD_CACHE.get("b").invoke(null , message);
+			Object component = Reflector.METHOD_CACHE.get("b").invoke(null, message);
 			Object type[] = Reflector.getNMSClass("ChatMessageType").getEnumConstants();
 			Object packet = Reflector.CONSTRUCTOR_CACHE.get("PacketPlayOutChat").newInstance(component, type[0], player.getUniqueId());
 			
@@ -156,6 +158,24 @@ public class Messenger {
 		}
 	}
 	
+	public static int sendTitlePacket(Player player, String message, PacketTitleAction type, int fade_in, int display_time, int fade_out) {
+		try {
+			Object component = Reflector.METHOD_CACHE.get("a").invoke(null, message);
+			Object packet = Reflector.CONSTRUCTOR_CACHE.get("PacketPlayOutTitle").newInstance(Reflector.getNMSClass("EnumTitleAction").getDeclaredFields()[type.ordinal()].get(null), component, fade_in, display_time, fade_out);
+			Packeteer.sendClientPacket(player, packet);
+			return 0;
+		} catch(InvocationTargetException json_exception) {
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 2;
+		}
+	}
+	
+	public static int sendTitle(Player player, String message, PacketTitleAction type, int fade_in, int display_time, int fade_out) {
+		return sendTitlePacket(player, colorWithJson(message).build(), type, fade_in, display_time, fade_out);
+	}
+	
 	/**
 	 * Sends a string to a player as a chat packet (Automatically Formatted into JSON)
 	 * @param player Player to send the chat message to
@@ -167,6 +187,12 @@ public class Messenger {
 	 */
 	public static int send(Player player, String message) {
 		return sendChatPacket(player, colorWithJson(message).build());
+	}
+	
+	public static int send(CommandSender sender, String message) {
+		if(!(sender instanceof Player)) sender.sendMessage(message);
+		else return send((Player) sender, message);
+		return 0;
 	}
 	
 	public static int send(Player player, Message message) {
