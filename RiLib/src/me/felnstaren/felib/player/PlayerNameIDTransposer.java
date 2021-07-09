@@ -1,5 +1,6 @@
 package me.felnstaren.felib.player;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -76,6 +77,12 @@ public class PlayerNameIDTransposer extends BinarySearchable<PlayerNameID> imple
 	//Binary Search
 	public String getName(UUID id) {
 		return super.get(SearchObject.getIndexValue(id)).getName();
+	}
+	
+	public ArrayList<String> getNames(ArrayList<UUID> ids) {
+		ArrayList<String> names = new ArrayList<String>();
+		for(UUID id : ids) names.add(getName(id));
+		return names;
 	}
 	
 	//Linear Search :(

@@ -25,6 +25,11 @@ public abstract class CommandContinuator implements CommandElement, Tabbable {
 	
 	
 	
+	public void addArgument(SubArgument argument) { arguments.add(argument); }
+	public void addCommand(SubCommand command) { commands.add(command); }
+	
+	
+	
 	//Handle command sending
 	public boolean handle(CommandSender sender, String[] args, int current) {
 		return forward(sender, args, current);
