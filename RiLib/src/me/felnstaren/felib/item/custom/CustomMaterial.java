@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.felnstaren.felib.item.custom.function.MaterialFunctionRegistry;
 import me.felnstaren.felib.item.recipe.RecipeMaker;
 import other.bananapuncher714.nbt.NBTEditor;
 
@@ -22,6 +23,7 @@ public class CustomMaterial {
 	
 	public static void init(JavaPlugin plugin) {
 		INSTANCE = new CustomMaterial(plugin);
+		MaterialFunctionRegistry.init(plugin);
 	}
 	
 	public static CustomMaterial inst() {

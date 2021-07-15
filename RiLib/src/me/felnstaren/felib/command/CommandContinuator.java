@@ -27,6 +27,8 @@ public abstract class CommandContinuator implements CommandElement, Tabbable {
 	
 	public void addArgument(SubArgument argument) { arguments.add(argument); }
 	public void addCommand(SubCommand command) { commands.add(command); }
+	public SubArgument getArgument(int index) { return arguments.get(index); }
+	public SubCommand getCommand(int index)   { return commands.get(index); }
 	
 	
 	
